@@ -28,10 +28,14 @@
 # library(devtools)
 # install_github("sumtxt/bonn", force=TRUE)
 # install.packages("dplyr")
+# install.packages("collapse")
+# install.packages("purr")
 
 ### Load add-on packages ### 
 library(bonn)
 library(dplyr)
+library(collapse)
+library(purr)
 
 ### clean start ###
 rm(list = ls())
@@ -89,11 +93,46 @@ inkar_multi <- function(var_vec, num_vec, geo) {
   ))
 }
 
-### Overview ###
+inkar_vote <- function(var_vec, num_vec) {
+  
+  if (length(var_vec) != length(num_vec)) {
+    stop("Vector 'var_vec' und 'num_vec' doesn't have the same length.")
+  }
+  
+  data_list <- list()
+  meta <- data.frame()
+  
+  for (i in seq_along(var_vec)) {
+    var <- var_vec[i]
+    num <- num_vec[i]
+    
+    df <-  get_data(variable=num, geography = "KRE") %>%
+      mutate(Time = as.numeric(Zeit)) %>%
+      slice_max(order_by = Time, n=3, by=Schlüssel) %>%
+      fgroup_by(Schlüssel) %>%
+      fselect(Wert) %>%
+      fmean() %>%
+      fungroup() %>%
+      rename(ID=Schlüssel) %>%
+      rename({{ var }} := Wert)
+    data_list[[var]] <- df
+    
+    meta_append <- get_metadata(num)
+    meta_append$var <- var
+    meta <- rbind(meta, meta_append)
+  }
+  
+  return(list(
+    data = data_list,
+    meta = meta
+  ))
+}
+
+### Geography: GEM (Gemeinden) #################################################
 # get_geographies()
 get_themes(geography = "GEM")
-get_variables(theme="155", geography = "GEM")
-get_metadata("492")
+get_variables(theme="021", geography = "GEM")
+get_metadata("51")
 
 ### Build vectors ###
 var_vec <- c(
@@ -122,7 +161,10 @@ var_vec <- c(
   'Child.Poverty', # Kinderarmut
   'Daycare', # Anzahl Kindertagesstätten
   'Students.18.to.25', # Studierende je 100 Einwohner 18 bis 25 Jahre
-  'Doctors' # Hausärzte
+  'Doctors', # Hausärzte
+  "Emp.Rate", # Beschäftigtenquote
+  "Emp.Rate.Women", # Beschäftigtenquote Frauen
+  "Unemp.Men" # Anteil Arbeitslose Männer zu Gesamtarbeitslose
 )
 
 num_vec <- c(
@@ -151,10 +193,110 @@ num_vec <- c(
   "344", # Kinderarmut
   "528", # Anzahl Kindertagesstätten
   "218", # Studierende je 100 Einwohner 18 bis 25 Jahre
-  "492" # Hausärzte
+  "276", # Hausärzte
+  "67", # Beschäftigtenquote
+  "68", # Beschäftigtenquote Frauen
+  "16" # Anteil Arbeitslose Männer zu Gesamtarbeitslose
 )
 
 ### Execute inkar_multi ###
-data_list <- inkar_multi(var_vec, num_vec, geo="GEM")
+gem_list <- inkar_multi(var_vec, num_vec, geo="GEM")
+
+### Geography: KRE (Kreis) #####################################################
+
+# get_geographies()
+get_themes(geography = "KRE")
+get_variables(theme="045", geography = "KRE")
+get_metadata("492")
+
+### Build vectors ###
+var_vec <- c(
+  "Emp.Primary", # Beschäftigte Pimärer Sektor
+  "Emp.Secundary", # Beschäftigte Sekundärer Sektor
+  "Emp.Tertiary", # Beschäftigte Tertiärer Sektor
+  "Emp.Creative", # Beschäftigte in Kreativbranchen
+  "Emp.AO.Academic", # Beschäftigte am AO mit akademischem Berufsabschluss
+  "Emp.AO.Vocational", # Beschäftigte am AO mit Berufsabschluss
+  "Emp.AO.NoTrain", # Beschäftigte am AO ohne Berufsabschluss
+  "Emp.Expert", # Beschäftigte mit Anforderungsniveau Experte
+  "Emp.Specialist", # Beschäftigte mit Anforderungsniveau Spezialist
+  "Emp.Professional", # Beschäftigte mit Anforderungsniveau Fachkraft
+  "Emp.Helper", # Beschäftigte mit Anforderungsniveau Helfer 
+  "Charg.Points.per100EV", # Ladepunkte je 100 Elektrofahrzeuge
+  "Share.Car.Hybrid", # Pkw Hybrid insgesamt
+  "Share.Car.Electro", # Pkw Elektro
+  "Apprent.Positions", # Ausbildungsplätze
+  "Apprent", # Auszubildende
+  "Share.Women.Council", # Frauenanteil im Stadtrat bzw. Kreistag
+  "Emp.Rate.Foreign", # Beschäftigtenquote Ausländer
+  "Income.Median.Age25to54", # Medianeinkommen 25 bis unter 55-Jährige
+  "Income.Median.Age55to64", # Medianeinkommen 55 bis unter 65-Jährige
+  "Pay.Gap.Gender", # Verdienstabstand zwischen Frauen und Männern
+  "GDP.perCapita", # Bruttoinlandsprodukt je Einwohner
+  "Land.Price" # Baulandpreise
+)
+
+num_vec <- c(
+  "103", # Beschäftigte Pimärer Sektor
+  "104", # Beschäftigte Sekundärer Sektor
+  "105", # Beschäftigte Tertiärer Sektor
+  "109", # Beschäftigte in Kreativbranchen
+  "80", # Beschäftigte am AO mit akademischem Berufsabschluss
+  "81", # Beschäftigte am AO mit Berufsabschluss
+  "82", # Beschäftigte am AO ohne Berufsabschluss
+  "86", # Beschäftigte mit Anforderungsniveau Experte
+  "87", # Beschäftigte mit Anforderungsniveau Spezialist
+  "88", # Beschäftigte mit Anforderungsniveau Fachkraft
+  "89", # Beschäftigte mit Anforderungsniveau Helfer 
+  "380", # Ladepunkte je 100 Elektrofahrzeuge
+  "374", # Pkw Hybrid insgesamt
+  "373", # Pkw Elektro
+  "207", # Ausbildungsplätze
+  "208", # Auszubildende
+  "543", # Frauenanteil im Stadtrat bzw. Kreistag
+  "70", # Beschäftigtenquote Ausländer
+  "239", # Medianeinkommen 25 bis unter 55-Jährige
+  "240", # Medianeinkommen 55 bis unter 65-Jährige
+  "243", # Verdienstabstand zwischen Frauen und Männern
+  "398", # Bruttoinlandsprodukt je Einwohner
+  "46" # Baulandpreise
+)
+
+### Execute inkar_multi ###
+kre_list <- inkar_multi(var_vec, num_vec, geo="KRE")
+
+### Stimmenanteile der letzten drei Wahlen #####################################
+
+### Build vectors ###
+var_vec <- c(
+  "Vote.Share.UNION", # Stimmenanteile CDU/CSU
+  "Vote.Share.SPD", # Stimmenanteile SPD
+  "Vote.Share.Gruene", # Stimmenanteile Grüne
+  "Vote.Share.FDP", # Stimmenanteile FDP
+  "Vote.Share.Other", # Stimmenanteile Sonstige Parteien
+  "Vote.Share.LINKE", # Stimmenanteile Die Linke
+  "Vote.Share.AFD" # Stimmenanteile AfD
+)
+
+num_vec <- c(
+ "195", # Stimmenanteile CDU/CSU
+ "196", # Stimmenanteile SPD
+ "197", # Stimmenanteile Grüne
+ "198", # Stimmenanteile FDP
+ "199", # Stimmenanteile Sonstige Parteien
+ "200", # Stimmenanteile Die Linke
+ "201"  # Stimmenanteile AfD
+)
+
+kre_list_vote <- inkar_vote(var_vec, num_vec)
+
+## -----------------------------------------------------------------------------
+## Merge
+## -----------------------------------------------------------------------------
+
+### Check number of obs. per list ###
+(obs_gem_list <- sapply(gem_list$data, nrow))
+obs_kre_list <- sapply(kre_list$data, nrow)
+obs_kre_list_vote <- sapply(kre_list_vote$data, nrow)
 
 ## -----------------------------------------------------------------------------
