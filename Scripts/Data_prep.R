@@ -27,13 +27,15 @@
 # install.packages("devtools")
 # library(devtools)
 # install_github("sumtxt/bonn", force=TRUE)
-# install.packages("dplyr")
+# install.packages("tidyverse") # for dplyr, readxl and tidyr
 # install.packages("collapse")
 # install.packages("purr")
 
 ### Load add-on packages ### 
 library(bonn)
 library(dplyr)
+library(readxl)
+library(tidyr)
 library(collapse)
 library(purr)
 
@@ -289,6 +291,26 @@ num_vec <- c(
 )
 
 kre_list_vote <- inkar_vote(var_vec, num_vec)
+
+## -----------------------------------------------------------------------------
+## Get county identifier
+## -----------------------------------------------------------------------------
+
+# I've downloaded the "Anschriftenverzeichnis 2023" from https://www.statistikportal.de/de/veroeffentlichungen/anschriftenverzeichnis
+# and adjusted the worksheet "Anschriften_31_01_2023"
+# Data includes areas which are not counties -> Housing data includes all counties
+
+housing_id <- gem_list$data$New.Housing.per.Capita %>%
+  select(ID) %>% mutate(ID = as.numeric(ID)) %>% pull()
+
+county_data <- read_excel(path = paste0(path_data, "/Destatis/31122023_Auszug_GV.xlsx"), 
+                        sheet = "Onlineprodukt_Gemeinden3112_adj") %>%
+  filter(!(is.na(Gem))) %>%
+  unite(ID_C, c("Land", "RB", "Kreis", "Gem"), sep="") %>%
+  mutate(ID_C = as.numeric(ID_C)) %>%
+  mutate(wtf=ifelse(ID_C %in% housing_id,1,0)) %>%
+  filter(wtf==1) %>%
+  select(!wtf)
 
 ## -----------------------------------------------------------------------------
 ## Merge
