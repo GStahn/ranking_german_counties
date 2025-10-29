@@ -27,9 +27,10 @@
 # install.packages("devtools")
 # library(devtools)
 # install_github("sumtxt/bonn", force=TRUE)
-# install.packages("tidyverse") # for dplyr, readxl and tidyr
+# install.packages("tidyverse") # for dplyr, readxl, tidyr and purrr
 # install.packages("collapse")
-# install.packages("purr")
+# install.packages("purrr")
+# install.packages("writexl")
 
 ### Load add-on packages ### 
 library(bonn)
@@ -37,7 +38,8 @@ library(dplyr)
 library(readxl)
 library(tidyr)
 library(collapse)
-library(purr)
+library(purrr)
+library(writexl)
 
 ### clean start ###
 rm(list = ls())
@@ -52,12 +54,13 @@ keep<-function(x){
 ### set working directory and paths ###
 setwd("/Users/apxww/Desktop/GitHub/ranking_german_counties")      
 path_data <- "/Users/apxww/Desktop/GitHub/ranking_german_counties/Data"
+path_work <- "/Users/apxww/Desktop/GitHub/ranking_german_counties/Work"
 
 ## -----------------------------------------------------------------------------
 ## Download INKAR data
 ## -----------------------------------------------------------------------------
 
-### Functions ###
+### Functions ##################################################################
 inkar_multi <- function(var_vec, num_vec, geo) {
   
   if (length(var_vec) != length(num_vec)) {
@@ -125,23 +128,28 @@ inkar_vote <- function(var_vec, num_vec) {
   }
   
   return(list(
-    data = data_list,
-    meta = meta
+    data_vote = data_list,
+    meta_vote = meta
   ))
 }
 
 ### Geography: GEM (Gemeinden) #################################################
 # get_geographies()
 get_themes(geography = "GEM")
-get_variables(theme="021", geography = "GEM")
+get_variables(theme="156", geography = "GEM")
 get_metadata("51")
 
 ### Build vectors ###
 var_vec <- c(
   "Population", # Bevölkerung gesamt
-  "Elg.Workers", # Erwerbsfähige Bevölkerung (15 bis unter 65 Jahre) 
+#  "Elg.Workers", # Erwerbsfähige Bevölkerung (15 bis unter 65 Jahre) 
   "New.Housing.per.Capita", # Neubauwohnungen je Einwohner
-  "Elderly.Population", # Einwohner 65 Jahre und älter
+  "Permit.Housing.perCapita", # Baugenehmigungen für Wohnungenje Einwohner
+  "Age.below.6", # Einwohner unter 6 Jahren
+  "Age.6.18", # Einwohner von 6 bis unter 18 Jahren
+  "Age.65", # Einwohner 65 Jahre und älter
+  "School.Primary", # Grundschulen
+  "School.SpecialEdu", # Allgemeinbildende Schulen mit Förderschwerpunkt
   "Migration.Balance", # Gesamtwanderungssaldo
   "Purchasing.Power", # Kaufkraft
   "Recreation.Area.per.Capita", # Erholungsfläche je Einwohner
@@ -157,13 +165,13 @@ var_vec <- c(
   'Broadband.50Mbps', # Bandbreitenverfügbarkeit mindestens 50 Mbit/s
   'Broadband.100Mbps', # Bandbreitenverfügbarkeit mindestens 100 Mbit/s
   'Broadband.1000Mbps', # Bandbreitenverfügbarkeit mindestens 1000 Mbit/s
-  "New.Family.Houses", # Neue Ein- und Zweifamilienhäuser
+#  "New.Family.Houses", # Neue Ein- und Zweifamilienhäuser
   'Public.Transport.Access', # Entfernung zur ÖV Haltestelle
   'Traffic.Accidents', # Verunglückte im Straßenverkehr
   'Child.Poverty', # Kinderarmut
   'Daycare', # Anzahl Kindertagesstätten
-  'Students.18.to.25', # Studierende je 100 Einwohner 18 bis 25 Jahre
-  'Doctors', # Hausärzte
+# 'Students.18.to.25', # Studierende je 100 Einwohner 18 bis 25 Jahre
+#  'Doctors', # Hausärzte
   "Emp.Rate", # Beschäftigtenquote
   "Emp.Rate.Women", # Beschäftigtenquote Frauen
   "Unemp.Men" # Anteil Arbeitslose Männer zu Gesamtarbeitslose
@@ -171,9 +179,14 @@ var_vec <- c(
 
 num_vec <- c(
   "2", # Bevölkerung gesamt
-  "6", # Erwerbsfähige Bevölkerung (15 bis unter 65 Jahre) 
+#  "6", # Erwerbsfähige Bevölkerung (15 bis unter 65 Jahre) 
   "53", # Neubauwohnungen je Einwohner
+  "47", # Baugenehmigungen für Wohnungenje Einwohner
+  "121", # Einwohner unter 6 Jahren
+  "123", # Einwohner von 6 bis unter 18 Jahren
   "129", # Einwohner 65 Jahre und älter
+  "502", # Grundschulen
+  "511", # Allgemeinbildende Schulen mit Förderschwerpunkt
   "162", # Gesamtwanderungssaldo
   "248", # Kaufkraft
   "258", # Erholungsfläche je Einwohner
@@ -189,13 +202,13 @@ num_vec <- c(
   "369", # Bandbreitenverfügbarkeit mindestens 50 Mbit/s
   "370", # Bandbreitenverfügbarkeit mindestens 100 Mbit/s
   "371", # Bandbreitenverfügbarkeit mindestens 1000 Mbit/s
-  "51", # Neue Ein- und Zweifamilienhäuser
+#  "51", # Neue Ein- und Zweifamilienhäuser
   "367", # Entfernung zur ÖV Haltestelle
   "382", # Verunglückte im Straßenverkehr
   "344", # Kinderarmut
   "528", # Anzahl Kindertagesstätten
-  "218", # Studierende je 100 Einwohner 18 bis 25 Jahre
-  "276", # Hausärzte
+# "218", # Studierende je 100 Einwohner 18 bis 25 Jahre
+# "492", # Hausärzte
   "67", # Beschäftigtenquote
   "68", # Beschäftigtenquote Frauen
   "16" # Anteil Arbeitslose Männer zu Gesamtarbeitslose
@@ -208,11 +221,48 @@ gem_list <- inkar_multi(var_vec, num_vec, geo="GEM")
 
 # get_geographies()
 get_themes(geography = "KRE")
-get_variables(theme="045", geography = "KRE")
+get_variables(theme="155", geography = "KRE")
 get_metadata("492")
 
 ### Build vectors ###
 var_vec <- c(
+  ### Same variables as for GEM ################################################
+  "Population", # Bevölkerung gesamt
+  #  "Elg.Workers", # Erwerbsfähige Bevölkerung (15 bis unter 65 Jahre) 
+  "New.Housing.per.Capita", # Neubauwohnungen je Einwohner
+  "Permit.Housing.perCapita", # Baugenehmigungen für Wohnungenje Einwohner
+  "Age.below.6", # Einwohner unter 6 Jahren
+  "Age.6.18", # Einwohner von 6 bis unter 18 Jahren
+  "Age.65", # Einwohner 65 Jahre und älter
+  "School.Primary", # Grundschulen
+  "School.SpecialEdu", # Allgemeinbildende Schulen mit Förderschwerpunkt
+  "Migration.Balance", # Gesamtwanderungssaldo
+  "Purchasing.Power", # Kaufkraft
+  "Recreation.Area.per.Capita", # Erholungsfläche je Einwohner
+  "Forest.Area", # Waldfläche
+  "Water.Area", # Wasserfläche
+  "Investment.Allocations", # Zuweisungen für Investitionsfördermaßnahmen
+  'Population.Density', # Einwohnerdichte
+  'Highway.Access', # Erreichbarkeit von Autobahnen
+  'Airport.Access', # Erreichbarkeit von Flughäfen
+  'Highspeed.Rail.Access', # Erreichbarkeit von IC/EC/ICE-Bahnhöfen
+  'Supermarket.Access', # Entfernung zum Supermarkt/Discounter
+  'Pharmacy.Access', # Entfernung zur Apotheke
+  'Broadband.50Mbps', # Bandbreitenverfügbarkeit mindestens 50 Mbit/s
+  'Broadband.100Mbps', # Bandbreitenverfügbarkeit mindestens 100 Mbit/s
+  'Broadband.1000Mbps', # Bandbreitenverfügbarkeit mindestens 1000 Mbit/s
+#  "New.Family.Houses", # Neue Ein- und Zweifamilienhäuser
+  'Public.Transport.Access', # Entfernung zur ÖV Haltestelle
+  'Traffic.Accidents', # Verunglückte im Straßenverkehr
+  'Child.Poverty', # Kinderarmut
+  'Daycare', # Anzahl Kindertagesstätten
+  # 'Students.18.to.25', # Studierende je 100 Einwohner 18 bis 25 Jahre
+  #  'Doctors', # Hausärzte
+  "Emp.Rate", # Beschäftigtenquote
+  "Emp.Rate.Women", # Beschäftigtenquote Frauen
+  "Unemp.Men", # Anteil Arbeitslose Männer zu Gesamtarbeitslose
+  ### Only District-level ######################################################
+  "Land.Price", # Baulandpreise
   "Emp.Primary", # Beschäftigte Pimärer Sektor
   "Emp.Secundary", # Beschäftigte Sekundärer Sektor
   "Emp.Tertiary", # Beschäftigte Tertiärer Sektor
@@ -235,10 +285,48 @@ var_vec <- c(
   "Income.Median.Age55to64", # Medianeinkommen 55 bis unter 65-Jährige
   "Pay.Gap.Gender", # Verdienstabstand zwischen Frauen und Männern
   "GDP.perCapita", # Bruttoinlandsprodukt je Einwohner
-  "Land.Price" # Baulandpreise
+  "Land.Price", # Baulandpreise
+  "Physician.GP" # Hausärzte
 )
 
 num_vec <- c(
+  ### Same variables as for GEM ################################################
+  "1", # Bevölkerung gesamt
+  #  "6", # Erwerbsfähige Bevölkerung (15 bis unter 65 Jahre) 
+  "53", # Neubauwohnungen je Einwohner
+  "47", # Baugenehmigungen für Wohnungenje Einwohner
+  "121", # Einwohner unter 6 Jahren
+  "122", # Einwohner von 6 bis unter 18 Jahren
+  "129", # Einwohner 65 Jahre und älter
+  "502", # Grundschulen
+  "511", # Allgemeinbildende Schulen mit Förderschwerpunkt
+  "162", # Gesamtwanderungssaldo
+  "248", # Kaufkraft
+  "258", # Erholungsfläche je Einwohner
+  "264", # Waldfläche
+  "265", # Wasserfläche
+  "303", # Zuweisungen für Investitionsfördermaßnahmen
+  '320', # Einwohnerdichte
+  "354", # Erreichbarkeit von Autobahnen
+  "355", # Erreichbarkeit von Flughäfen
+  "356", # Erreichbarkeit von IC/EC/ICE-Bahnhöfen
+  "359", # Entfernung zum Supermarkt/Discounter
+  "362", # Entfernung zur Apotheke
+  "369", # Bandbreitenverfügbarkeit mindestens 50 Mbit/s
+  "370", # Bandbreitenverfügbarkeit mindestens 100 Mbit/s
+  "371", # Bandbreitenverfügbarkeit mindestens 1000 Mbit/s
+  #  "51", # Neue Ein- und Zweifamilienhäuser
+  "367", # Entfernung zur ÖV Haltestelle
+  "382", # Verunglückte im Straßenverkehr
+  "344", # Kinderarmut
+  "528", # Anzahl Kindertagesstätten
+  # "218", # Studierende je 100 Einwohner 18 bis 25 Jahre
+  # "492", # Hausärzte
+  "67", # Beschäftigtenquote
+  "68", # Beschäftigtenquote Frauen
+  "16", # Anteil Arbeitslose Männer zu Gesamtarbeitslose
+  ### Only District-level ######################################################
+  "46", # Baulandpreise
   "103", # Beschäftigte Pimärer Sektor
   "104", # Beschäftigte Sekundärer Sektor
   "105", # Beschäftigte Tertiärer Sektor
@@ -261,7 +349,8 @@ num_vec <- c(
   "240", # Medianeinkommen 55 bis unter 65-Jährige
   "243", # Verdienstabstand zwischen Frauen und Männern
   "398", # Bruttoinlandsprodukt je Einwohner
-  "46" # Baulandpreise
+  "46", # Baulandpreise
+  "492" # Hausärzte
 )
 
 ### Execute inkar_multi ###
@@ -292,6 +381,11 @@ num_vec <- c(
 
 kre_list_vote <- inkar_vote(var_vec, num_vec)
 
+### Create one kre list 
+kre_list_final <- c(kre_list, kre_list_vote)
+
+rm(kre_list_vote)
+
 ## -----------------------------------------------------------------------------
 ## Get county identifier
 ## -----------------------------------------------------------------------------
@@ -316,9 +410,69 @@ county_data <- read_excel(path = paste0(path_data, "/Destatis/31122023_Auszug_GV
 ## Merge
 ## -----------------------------------------------------------------------------
 
+### GEM; Gemeinden #############################################################
+
+### Retrieve meta data ###
+meta_gem <- gem_list$meta
+write_xlsx(meta_gem, path=paste0(path_work, "/Data_Info/Meta_gem.xlsx"))
+rm(meta_gem)
+
 ### Check number of obs. per list ###
 (obs_gem_list <- sapply(gem_list$data, nrow))
-obs_kre_list <- sapply(kre_list$data, nrow)
-obs_kre_list_vote <- sapply(kre_list_vote$data, nrow)
+
+### Merge all with the same number of obs. ###
+common_n <- names(obs_gem_list[obs_gem_list == 10775])
+lst_same <- gem_list$data[common_n]
+
+merged_gem <- lst_same %>% 
+  reduce(left_join, by="ID") %>%
+  select(-ends_with(".y")) %>%
+  select(-ends_with(".x")) 
+
+### Merge all with not the same number of obs. ###
+uncommon_n <- names(obs_gem_list[obs_gem_list != 10775])
+lst_notsame <- gem_list$data[uncommon_n]
+
+### Merge with Current rents (siehe Deutschlandatlas) ###
+
+### KRE; Kreise (Code funktioniert nicht) ######################################
+
+# Retrieve meta data
+meta_kre <- kre_list_final$meta
+meta_kre_vote <- kre_list_final$meta_vote
+meta_kre <- rbind(meta_kre, meta_kre_vote)
+write_xlsx(meta_kre, path=paste0(path_work, "/Data_Info/Meta_kre.xlsx"))
+rm(meta_kre_vote, meta_kre)
+
+### Check number of obs. per list ###
+(obs_kre_list_final <- sapply(kre_list_final$data, nrow))
+(obs_kre_list_final_vote <- sapply(kre_list_final$data_vote, nrow))
+
+### Merge all with the same number of obs. ###
+common_n <- names(obs_kre_list_final[obs_kre_list_final == 400])
+lst_same <- kre_list_final$data[common_n]
+
+merged_kre_df_d1 <- lst_same %>% 
+  reduce(left_join, by="ID") %>%
+  select(-ends_with(".y")) %>%
+  select(-ends_with(".x")) %>%
+  select(-Time)
+
+common_n <- names(obs_kre_list_final_vote[obs_kre_list_final_vote == 400])
+lst_same <- kre_list_final$data_vote[common_n]
+
+merged_kre_df_d2 <- lst_same %>% 
+  reduce(left_join, by="ID") %>%
+  select(-ends_with(".y")) %>%
+  select(-ends_with(".x")) 
+
+merged_kre_df <- full_join(merged_kre_df_d1, merged_kre_df_d2, by="ID")
+rm(merged_kre_df_d1, merged_kre_df_d2)
+
+## -----------------------------------------------------------------------------
+## Adjust
+## -----------------------------------------------------------------------------
+
+# Create Share of people equal to 18 and below 65
 
 ## -----------------------------------------------------------------------------
