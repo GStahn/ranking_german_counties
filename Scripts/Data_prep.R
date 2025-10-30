@@ -80,7 +80,7 @@ inkar_multi <- function(var_vec, num_vec, geo) {
     df <-  get_data(variable=num, geography = geo) %>%
       mutate(Time = as.numeric(Zeit)) %>%
       filter(Time==max(Time)) %>%
-      rename(ID=Schlüssel) %>%
+      mutate(ID = as.numeric(Schlüssel)) %>%
       rename({{ var }} := Wert) %>%
       select(c("ID", "Raumbezug", {{var}}, "Time"))
     data_list[[var]] <- df
@@ -88,6 +88,7 @@ inkar_multi <- function(var_vec, num_vec, geo) {
     
     meta_append <- get_metadata(num)
     meta_append$var <- var
+    meta_append$source <- "INKAR"
     meta <- rbind(meta, meta_append)
   }
   
@@ -118,12 +119,13 @@ inkar_vote <- function(var_vec, num_vec) {
       fselect(Wert) %>%
       fmean() %>%
       fungroup() %>%
-      rename(ID=Schlüssel) %>%
+      mutate(ID = as.numeric(Schlüssel)) %>%
       rename({{ var }} := Wert)
     data_list[[var]] <- df
     
     meta_append <- get_metadata(num)
     meta_append$var <- var
+    meta_append$source <- "INKAR"
     meta <- rbind(meta, meta_append)
   }
   
@@ -136,8 +138,8 @@ inkar_vote <- function(var_vec, num_vec) {
 ### Geography: GEM (Gemeinden) #################################################
 # get_geographies()
 get_themes(geography = "GEM")
-get_variables(theme="156", geography = "GEM")
-get_metadata("51")
+get_variables(theme="131", geography = "GEM")
+get_metadata("363")
 
 ### Build vectors ###
 var_vec <- c(
@@ -155,13 +157,13 @@ var_vec <- c(
   "Recreation.Area.per.Capita", # Erholungsfläche je Einwohner
   "Forest.Area", # Waldfläche
   "Water.Area", # Wasserfläche
-  "Investment.Allocations", # Zuweisungen für Investitionsfördermaßnahmen
   'Population.Density', # Einwohnerdichte
   'Highway.Access', # Erreichbarkeit von Autobahnen
   'Airport.Access', # Erreichbarkeit von Flughäfen
   'Highspeed.Rail.Access', # Erreichbarkeit von IC/EC/ICE-Bahnhöfen
   'Supermarket.Access', # Entfernung zum Supermarkt/Discounter
-  'Pharmacy.Access', # Entfernung zur Apotheke
+  'Doc.GP', # Entfernung zum Hausarzt
+  "Pharmacy.Access", # Entfernung nächste Apotheke
   'Broadband.50Mbps', # Bandbreitenverfügbarkeit mindestens 50 Mbit/s
   'Broadband.100Mbps', # Bandbreitenverfügbarkeit mindestens 100 Mbit/s
   'Broadband.1000Mbps', # Bandbreitenverfügbarkeit mindestens 1000 Mbit/s
@@ -171,7 +173,6 @@ var_vec <- c(
   'Child.Poverty', # Kinderarmut
   'Daycare', # Anzahl Kindertagesstätten
 # 'Students.18.to.25', # Studierende je 100 Einwohner 18 bis 25 Jahre
-#  'Doctors', # Hausärzte
   "Emp.Rate", # Beschäftigtenquote
   "Emp.Rate.Women", # Beschäftigtenquote Frauen
   "Unemp.Men" # Anteil Arbeitslose Männer zu Gesamtarbeitslose
@@ -192,13 +193,13 @@ num_vec <- c(
   "258", # Erholungsfläche je Einwohner
   "264", # Waldfläche 
   "265", # Wasserfläche
-  "303", # Zuweisungen für Investitionsfördermaßnahmen
   "320", # Einwohnerdichte
   "354", # Erreichbarkeit von Autobahnen
   "355", # Erreichbarkeit von Flughäfen
   "356", # Erreichbarkeit von IC/EC/ICE-Bahnhöfen
   "359", # Entfernung zum Supermarkt/Discounter
-  "362", # Entfernung zur Apotheke
+  "362", # Entfernung zum Hausarzt
+  "363", # Entfernung nächste Apotheke
   "369", # Bandbreitenverfügbarkeit mindestens 50 Mbit/s
   "370", # Bandbreitenverfügbarkeit mindestens 100 Mbit/s
   "371", # Bandbreitenverfügbarkeit mindestens 1000 Mbit/s
@@ -208,7 +209,6 @@ num_vec <- c(
   "344", # Kinderarmut
   "528", # Anzahl Kindertagesstätten
 # "218", # Studierende je 100 Einwohner 18 bis 25 Jahre
-# "492", # Hausärzte
   "67", # Beschäftigtenquote
   "68", # Beschäftigtenquote Frauen
   "16" # Anteil Arbeitslose Männer zu Gesamtarbeitslose
@@ -221,8 +221,8 @@ gem_list <- inkar_multi(var_vec, num_vec, geo="GEM")
 
 # get_geographies()
 get_themes(geography = "KRE")
-get_variables(theme="155", geography = "KRE")
-get_metadata("492")
+get_variables(theme="131", geography = "KRE")
+get_metadata("496")
 
 ### Build vectors ###
 var_vec <- c(
@@ -241,13 +241,13 @@ var_vec <- c(
   "Recreation.Area.per.Capita", # Erholungsfläche je Einwohner
   "Forest.Area", # Waldfläche
   "Water.Area", # Wasserfläche
-  "Investment.Allocations", # Zuweisungen für Investitionsfördermaßnahmen
   'Population.Density', # Einwohnerdichte
   'Highway.Access', # Erreichbarkeit von Autobahnen
   'Airport.Access', # Erreichbarkeit von Flughäfen
   'Highspeed.Rail.Access', # Erreichbarkeit von IC/EC/ICE-Bahnhöfen
   'Supermarket.Access', # Entfernung zum Supermarkt/Discounter
-  'Pharmacy.Access', # Entfernung zur Apotheke
+  'Doc.GP', # Entfernung zum Hausarzt
+  "Pharmacy.Access", # Entfernung nächste Apotheke
   'Broadband.50Mbps', # Bandbreitenverfügbarkeit mindestens 50 Mbit/s
   'Broadband.100Mbps', # Bandbreitenverfügbarkeit mindestens 100 Mbit/s
   'Broadband.1000Mbps', # Bandbreitenverfügbarkeit mindestens 1000 Mbit/s
@@ -262,6 +262,7 @@ var_vec <- c(
   "Emp.Rate.Women", # Beschäftigtenquote Frauen
   "Unemp.Men", # Anteil Arbeitslose Männer zu Gesamtarbeitslose
   ### Only District-level ######################################################
+  "Investment.Allocations", # Zuweisungen für Investitionsfördermaßnahmen
   "Land.Price", # Baulandpreise
   "Emp.Primary", # Beschäftigte Pimärer Sektor
   "Emp.Secundary", # Beschäftigte Sekundärer Sektor
@@ -285,8 +286,7 @@ var_vec <- c(
   "Income.Median.Age55to64", # Medianeinkommen 55 bis unter 65-Jährige
   "Pay.Gap.Gender", # Verdienstabstand zwischen Frauen und Männern
   "GDP.perCapita", # Bruttoinlandsprodukt je Einwohner
-  "Land.Price", # Baulandpreise
-  "Physician.GP" # Hausärzte
+  "Land.Price" # Baulandpreise
 )
 
 num_vec <- c(
@@ -305,13 +305,13 @@ num_vec <- c(
   "258", # Erholungsfläche je Einwohner
   "264", # Waldfläche
   "265", # Wasserfläche
-  "303", # Zuweisungen für Investitionsfördermaßnahmen
   '320', # Einwohnerdichte
   "354", # Erreichbarkeit von Autobahnen
   "355", # Erreichbarkeit von Flughäfen
   "356", # Erreichbarkeit von IC/EC/ICE-Bahnhöfen
   "359", # Entfernung zum Supermarkt/Discounter
-  "362", # Entfernung zur Apotheke
+  "362", # Entfernung zum Hausarzt
+  "363", # Entfernung nächste Apotheke
   "369", # Bandbreitenverfügbarkeit mindestens 50 Mbit/s
   "370", # Bandbreitenverfügbarkeit mindestens 100 Mbit/s
   "371", # Bandbreitenverfügbarkeit mindestens 1000 Mbit/s
@@ -321,11 +321,11 @@ num_vec <- c(
   "344", # Kinderarmut
   "528", # Anzahl Kindertagesstätten
   # "218", # Studierende je 100 Einwohner 18 bis 25 Jahre
-  # "492", # Hausärzte
   "67", # Beschäftigtenquote
   "68", # Beschäftigtenquote Frauen
   "16", # Anteil Arbeitslose Männer zu Gesamtarbeitslose
   ### Only District-level ######################################################
+  "303", # Zuweisungen für Investitionsfördermaßnahmen
   "46", # Baulandpreise
   "103", # Beschäftigte Pimärer Sektor
   "104", # Beschäftigte Sekundärer Sektor
@@ -349,8 +349,7 @@ num_vec <- c(
   "240", # Medianeinkommen 55 bis unter 65-Jährige
   "243", # Verdienstabstand zwischen Frauen und Männern
   "398", # Bruttoinlandsprodukt je Einwohner
-  "46", # Baulandpreise
-  "492" # Hausärzte
+  "46" # Baulandpreise
 )
 
 ### Execute inkar_multi ###
@@ -407,6 +406,59 @@ county_data <- read_excel(path = paste0(path_data, "/Destatis/31122023_Auszug_GV
   select(!wtf)
 
 ## -----------------------------------------------------------------------------
+## Get rent data
+## -----------------------------------------------------------------------------
+
+### GEM ########################################################################
+gem_Rents <- read_xlsx(path = paste0(path_data, "/Destatis/4000W-0004_de.xlsx"),
+                       sheet = "4000W-0004_adjusted") %>%
+  mutate(Rent.NetAvg = replace(Rent.NetAvg, Rent.NetAvg=="-", NA)) %>%
+  mutate(Rent.NetAvg = replace(Rent.NetAvg, Rent.NetAvg==".", NA)) %>%
+  mutate(ID = substring(ID, nchar(ID) - 3 + 1, nchar(ID))) %>% #### Das funktioniert noch nicht!
+  mutate(ID = as.numeric(ID)) %>%
+  mutate(Rent.NetAvg = as.numeric(Rent.NetAvg))
+
+# summary(gem_Rents)
+
+### Add meta data ###
+
+gem_list$meta <- rbind(
+  gem_list$meta,
+  data.frame(
+    Name = "Durchschnittliche Nettokaltmiete",
+    Kurzname = NA,
+    Algorithmus = NA,
+    Quelle = NA,
+    Anmerkungen = NA,
+    ID = NA,
+    var = "Rent.NetAvg",
+    source = "Zensus 2022",
+    stringsAsFactors = FALSE
+  )
+)
+
+### KRE ########################################################################
+kre_Rents <- read_xlsx(path = paste0(path_data, "/Destatis/4000W-0004_de_kre.xlsx"),
+                       sheet = "4000W-0004_adjusted") %>%
+  mutate(ID = as.numeric(ID)) 
+
+### Add meta data ###
+kre_list$meta <- rbind(
+  kre_list$meta,
+  data.frame(
+    Name = "Durchschnittliche Nettokaltmiete",
+    Kurzname = NA,
+    Algorithmus = NA,
+    Quelle = NA,
+    Anmerkungen = NA,
+    ID = NA,
+    var = "Rent.NetAvg",
+    source = "Zensus 2022",
+    stringsAsFactors = FALSE
+  )
+)
+
+## -----------------------------------------------------------------------------
 ## Merge
 ## -----------------------------------------------------------------------------
 
@@ -415,25 +467,59 @@ county_data <- read_excel(path = paste0(path_data, "/Destatis/31122023_Auszug_GV
 ### Retrieve meta data ###
 meta_gem <- gem_list$meta
 write_xlsx(meta_gem, path=paste0(path_work, "/Data_Info/Meta_gem.xlsx"))
-rm(meta_gem)
+# rm(meta_gem)
 
 ### Check number of obs. per list ###
 (obs_gem_list <- sapply(gem_list$data, nrow))
 
-### Merge all with the same number of obs. ###
-common_n <- names(obs_gem_list[obs_gem_list == 10775])
-lst_same <- gem_list$data[common_n]
+### Folgendes eventuell löschen ################################################
+# ### Merge all with the same number of obs. ###
+# common_n <- names(obs_gem_list[obs_gem_list == 10775])
+# lst_same <- gem_list$data[common_n]
+# 
+# merged_gem_d1 <- lst_same %>% 
+#   reduce(left_join, by="ID") %>%
+#   select(-ends_with(".y")) %>%
+#   select(-ends_with(".x")) 
+# 
+# ### Merge all with number of obs. bigger than 10775 ###
+# bigger_n <- names(obs_gem_list[obs_gem_list > 10775])
+# lst_bigger <- gem_list$data[bigger_n]
+# 
+# # Keep only obs. from housing_id    
+# lst_bigger <- lapply(lst_bigger, function(df) {
+#   df %>% filter(ID %in% housing_id)
+# })
+# 
+# #common_n <- names(obs_gem_list[obs_gem_list == 10775])
+# #lst_same <- gem_list$data[common_n]
+# 
+# merged_gem_d2 <- lst_bigger %>% 
+#   reduce(left_join, by="ID") %>%
+#   select(-ends_with(".y")) %>%
+#   select(-ends_with(".x"))
+# 
+# ### Merge gem data together ###
+# merged_gem <- merged_gem_d1 %>%
+#   left_join(merged_gem_d2, by="ID")
+# 
+# summary(merged_gem)
+# 
+# ### Merge all with number of obs. lower than 10775 ###
+# lower_n <- names(obs_gem_list[obs_gem_list < 10775])
+# lst_lower <- gem_list$data[lower_n]
+################################################################################
 
-merged_gem <- lst_same %>% 
+merged_gem <- gem_list$data %>%
   reduce(left_join, by="ID") %>%
   select(-ends_with(".y")) %>%
-  select(-ends_with(".x")) 
+  select(-ends_with(".x")) %>%
+  filter(ID %in% housing_id) %>%
+  left_join(gem_Rents, by="ID")
 
-### Merge all with not the same number of obs. ###
-uncommon_n <- names(obs_gem_list[obs_gem_list != 10775])
-lst_notsame <- gem_list$data[uncommon_n]
+summary(merged_gem)
 
-### Merge with Current rents (siehe Deutschlandatlas) ###
+### Idee: Bei den NAs wird die Kreiszahl genutzt. -> Könnte in Zukunft vielleicht noch verbessert werden. ###
 
 ### KRE; Kreise (Code funktioniert nicht) ######################################
 
