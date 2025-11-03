@@ -386,6 +386,16 @@ kre_list_final <- c(kre_list, kre_list_vote)
 rm(kre_list_vote)
 
 ## -----------------------------------------------------------------------------
+## Get KRE names + additional data
+## -----------------------------------------------------------------------------
+
+kre_add <- read_xlsx(path=paste0(path_data, "/INKAR/BBSR_Raumgliederungen_Referenzen_2022.xlsx"), 
+                                   sheet="Kreisreferenz", skip=1, .name_repair = "universal")%>%
+  rename(ID= Kreise..2022..Kennziffer) %>%
+  rename(Name=Kreise..2022..Name) %>%
+  mutate(ID = as.numeric(ID))
+
+## -----------------------------------------------------------------------------
 ## Get county identifier
 ## -----------------------------------------------------------------------------
 
@@ -406,6 +416,18 @@ county_data <- read_excel(path = paste0(path_data, "/Destatis/31122023_Auszug_GV
   select(!wtf)
 
 ## -----------------------------------------------------------------------------
+## Get GEM names + additional data
+## -----------------------------------------------------------------------------
+
+gem_add <- read_xlsx(path=paste0(path_data, "/INKAR/BBSR_Raumgliederungen_Referenzen_2022.xlsx"), 
+                     sheet="Gemeindereferenz (inkl. Kreise)", skip=1, .name_repair = "universal")%>%
+  rename(ID= Gemeinden..2022..Kennziffer) %>%
+  rename(Name=Gemeinden..2022..Name) %>%
+  select(!(Gemeinden..2022..Regionalschlüssel)) %>%
+  mutate(ID = as.numeric(ID)) %>%
+  filter(ID %nin% housing_id)
+
+## -----------------------------------------------------------------------------
 ## Get rent data
 ## -----------------------------------------------------------------------------
 
@@ -414,14 +436,16 @@ gem_Rents <- read_xlsx(path = paste0(path_data, "/Destatis/4000W-0004_de.xlsx"),
                        sheet = "4000W-0004_adjusted") %>%
   mutate(Rent.NetAvg = replace(Rent.NetAvg, Rent.NetAvg=="-", NA)) %>%
   mutate(Rent.NetAvg = replace(Rent.NetAvg, Rent.NetAvg==".", NA)) %>%
-  mutate(ID = substring(ID, nchar(ID) - 3 + 1, nchar(ID))) %>% #### Das funktioniert noch nicht!
-  mutate(ID = as.numeric(ID)) %>%
-  mutate(Rent.NetAvg = as.numeric(Rent.NetAvg))
+  mutate(ID = as.numeric(gsub("^(.{5}).{4}(.*)$", "\\1\\2", ID))) %>%
+  filter(ID %in% housing_id) %>%
+  select(!(Name))
 
-# summary(gem_Rents)
+#### Nächster Step: 
+#   - alles mergen 
+#   - bei GEM Daten die ID der Kreise extrahieren (siehe Wikipedia)
+#####
 
 ### Add meta data ###
-
 gem_list$meta <- rbind(
   gem_list$meta,
   data.frame(
@@ -440,7 +464,8 @@ gem_list$meta <- rbind(
 ### KRE ########################################################################
 kre_Rents <- read_xlsx(path = paste0(path_data, "/Destatis/4000W-0004_de_kre.xlsx"),
                        sheet = "4000W-0004_adjusted") %>%
-  mutate(ID = as.numeric(ID)) 
+  mutate(ID = as.numeric(ID)) %>%
+  select(!(Name))
 
 ### Add meta data ###
 kre_list$meta <- rbind(
@@ -515,11 +540,9 @@ merged_gem <- gem_list$data %>%
   select(-ends_with(".y")) %>%
   select(-ends_with(".x")) %>%
   filter(ID %in% housing_id) %>%
-  left_join(gem_Rents, by="ID")
+  full_join(gem_Rents, by="ID") 
 
 summary(merged_gem)
-
-### Idee: Bei den NAs wird die Kreiszahl genutzt. -> Könnte in Zukunft vielleicht noch verbessert werden. ###
 
 ### KRE; Kreise (Code funktioniert nicht) ######################################
 
@@ -534,18 +557,17 @@ rm(meta_kre_vote, meta_kre)
 (obs_kre_list_final <- sapply(kre_list_final$data, nrow))
 (obs_kre_list_final_vote <- sapply(kre_list_final$data_vote, nrow))
 
-### Merge all with the same number of obs. ###
-common_n <- names(obs_kre_list_final[obs_kre_list_final == 400])
-lst_same <- kre_list_final$data[common_n]
-
-merged_kre_df_d1 <- lst_same %>% 
+### Merge all ###
+merged_kre <- kre_list_final$data %>%
   reduce(left_join, by="ID") %>%
   select(-ends_with(".y")) %>%
-  select(-ends_with(".x")) %>%
-  select(-Time)
+  select(-ends_with(".x"))
 
-common_n <- names(obs_kre_list_final_vote[obs_kre_list_final_vote == 400])
-lst_same <- kre_list_final$data_vote[common_n]
+test <- merged_kre %>%
+  filter(is.na(Emp.Helper))
+
+summary(merged_kre)
+
 
 merged_kre_df_d2 <- lst_same %>% 
   reduce(left_join, by="ID") %>%
