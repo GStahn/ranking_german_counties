@@ -40,6 +40,7 @@ library(tidyr)
 library(collapse)
 library(purrr)
 library(writexl)
+library(readr)
 
 ### clean start ###
 rm(list = ls())
@@ -57,10 +58,12 @@ path_data <- "/Users/apxww/Desktop/GitHub/ranking_german_counties/Data"
 path_work <- "/Users/apxww/Desktop/GitHub/ranking_german_counties/Work"
 
 ## -----------------------------------------------------------------------------
-## Download INKAR data
+## INKAR Data
 ## -----------------------------------------------------------------------------
 
-### Functions ##################################################################
+### Download ###################################################################
+
+### Functions ####
 inkar_multi <- function(var_vec, num_vec, geo) {
   
   if (length(var_vec) != length(num_vec)) {
@@ -135,13 +138,13 @@ inkar_vote <- function(var_vec, num_vec) {
   ))
 }
 
-### Geography: GEM (Gemeinden) #################################################
+### Geography: GEM (Gemeinden) ###
 # get_geographies()
 get_themes(geography = "GEM")
 get_variables(theme="131", geography = "GEM")
 get_metadata("363")
 
-### Build vectors ###
+# Build vectors 
 var_vec <- c(
   "Population", # Bevölkerung gesamt
 #  "Elg.Workers", # Erwerbsfähige Bevölkerung (15 bis unter 65 Jahre) 
@@ -214,17 +217,17 @@ num_vec <- c(
   "16" # Anteil Arbeitslose Männer zu Gesamtarbeitslose
 )
 
-### Execute inkar_multi ###
+# Execute inkar_multi
 gem_list <- inkar_multi(var_vec, num_vec, geo="GEM")
 
-### Geography: KRE (Kreis) #####################################################
+### Geography: KRE (Kreis) ###
 
 # get_geographies()
 get_themes(geography = "KRE")
 get_variables(theme="131", geography = "KRE")
 get_metadata("496")
 
-### Build vectors ###
+# Build vectors
 var_vec <- c(
   ### Same variables as for GEM ################################################
   "Population", # Bevölkerung gesamt
@@ -352,12 +355,12 @@ num_vec <- c(
   "46" # Baulandpreise
 )
 
-### Execute inkar_multi ###
+# Execute inkar_multi
 kre_list <- inkar_multi(var_vec, num_vec, geo="KRE")
 
-### Stimmenanteile der letzten drei Wahlen #####################################
+### Voting percentages last three elections ###
 
-### Build vectors ###
+# Build vectors
 var_vec <- c(
   "Vote.Share.UNION", # Stimmenanteile CDU/CSU
   "Vote.Share.SPD", # Stimmenanteile SPD
@@ -385,19 +388,20 @@ kre_list_final <- c(kre_list, kre_list_vote)
 
 rm(kre_list_vote)
 
-## -----------------------------------------------------------------------------
-## Get KRE names + additional data
-## -----------------------------------------------------------------------------
+### Get KRE names + additional data ############################################
 
-kre_add <- read_xlsx(path=paste0(path_data, "/INKAR/BBSR_Raumgliederungen_Referenzen_2022.xlsx"), 
-                                   sheet="Kreisreferenz", skip=1, .name_repair = "universal")%>%
-  rename(ID= Kreise..2022..Kennziffer) %>%
-  rename(Name=Kreise..2022..Name) %>%
-  mutate(ID = as.numeric(ID))
+kre_add <- read_xlsx(path=paste0(path_data, "/INKAR/BBSR_Raumgliederungen_Referenzen_2023.xlsx"), 
+                                   sheet="Kreisreferenz", skip=1, .name_repair = "universal") %>%
+  mutate(Kreise..2023..Kennziffer = as.numeric(Kreise..2023..Kennziffer)) %>%
+  mutate(ID_K = if_else(Kreise..2023..Kennziffer >= 10000000,
+                        substr(format(Kreise..2023..Kennziffer, scientific = FALSE, trim=T), 1, 5),
+                        substr(format(Kreise..2023..Kennziffer, scientific = FALSE, trim=T), 1, 4))) %>%
+  mutate(ID_K = as.numeric(ID_K)) %>%
+  rename(Name=Kreise..2023..Name) %>%
+  select(!Kreise..2023..Kennziffer) %>%
+  relocate(Name, ID_K)
 
-## -----------------------------------------------------------------------------
-## Get county identifier
-## -----------------------------------------------------------------------------
+### Get county identifier ######################################################
 
 # I've downloaded the "Anschriftenverzeichnis 2023" from https://www.statistikportal.de/de/veroeffentlichungen/anschriftenverzeichnis
 # and adjusted the worksheet "Anschriften_31_01_2023"
@@ -415,23 +419,19 @@ county_data <- read_excel(path = paste0(path_data, "/Destatis/31122023_Auszug_GV
   filter(wtf==1) %>%
   select(!wtf)
 
-## -----------------------------------------------------------------------------
-## Get GEM names + additional data
-## -----------------------------------------------------------------------------
+### Get GEM names + additional data ############################################
 
-gem_add <- read_xlsx(path=paste0(path_data, "/INKAR/BBSR_Raumgliederungen_Referenzen_2022.xlsx"), 
-                     sheet="Gemeindereferenz (inkl. Kreise)", skip=1, .name_repair = "universal")%>%
-  rename(ID= Gemeinden..2022..Kennziffer) %>%
-  rename(Name=Gemeinden..2022..Name) %>%
-  select(!(Gemeinden..2022..Regionalschlüssel)) %>%
+gem_add <- read_xlsx(path=paste0(path_data, "/INKAR/BBSR_Raumgliederungen_Referenzen_2023.xlsx"), 
+                     sheet="Gemeindereferenz (inkl. Kreise)", skip=1, .name_repair = "universal") %>%
+  rename(ID= Gemeinden..2023..Kennziffer) %>%
+  rename(Name=Gemeinden..2023..Name) %>%
+  select(!(Gemeindekennziffer..RS.)) %>%
   mutate(ID = as.numeric(ID)) %>%
-  filter(ID %nin% housing_id)
+  filter(ID %in% housing_id)
 
-## -----------------------------------------------------------------------------
-## Get rent data
-## -----------------------------------------------------------------------------
+### Get rent data ##############################################################
 
-### GEM ########################################################################
+### GEM ###
 gem_Rents <- read_xlsx(path = paste0(path_data, "/Destatis/4000W-0004_de.xlsx"),
                        sheet = "4000W-0004_adjusted") %>%
   mutate(Rent.NetAvg = replace(Rent.NetAvg, Rent.NetAvg=="-", NA)) %>%
@@ -439,11 +439,6 @@ gem_Rents <- read_xlsx(path = paste0(path_data, "/Destatis/4000W-0004_de.xlsx"),
   mutate(ID = as.numeric(gsub("^(.{5}).{4}(.*)$", "\\1\\2", ID))) %>%
   filter(ID %in% housing_id) %>%
   select(!(Name))
-
-#### Nächster Step: 
-#   - alles mergen 
-#   - bei GEM Daten die ID der Kreise extrahieren (siehe Wikipedia)
-#####
 
 ### Add meta data ###
 gem_list$meta <- rbind(
@@ -461,13 +456,13 @@ gem_list$meta <- rbind(
   )
 )
 
-### KRE ########################################################################
+### KRE ####
 kre_Rents <- read_xlsx(path = paste0(path_data, "/Destatis/4000W-0004_de_kre.xlsx"),
                        sheet = "4000W-0004_adjusted") %>%
   mutate(ID = as.numeric(ID)) %>%
   select(!(Name))
 
-### Add meta data ###
+# Add meta data 
 kre_list$meta <- rbind(
   kre_list$meta,
   data.frame(
@@ -483,68 +478,31 @@ kre_list$meta <- rbind(
   )
 )
 
-## -----------------------------------------------------------------------------
-## Merge
-## -----------------------------------------------------------------------------
+### Merge INKAR ################################################################
 
-### GEM; Gemeinden #############################################################
+### GEM; Gemeinden ###
 
-### Retrieve meta data ###
+# Retrieve meta data
 meta_gem <- gem_list$meta
 write_xlsx(meta_gem, path=paste0(path_work, "/Data_Info/Meta_gem.xlsx"))
 # rm(meta_gem)
 
-### Check number of obs. per list ###
+# Check number of obs. per list 
 (obs_gem_list <- sapply(gem_list$data, nrow))
-
-### Folgendes eventuell löschen ################################################
-# ### Merge all with the same number of obs. ###
-# common_n <- names(obs_gem_list[obs_gem_list == 10775])
-# lst_same <- gem_list$data[common_n]
-# 
-# merged_gem_d1 <- lst_same %>% 
-#   reduce(left_join, by="ID") %>%
-#   select(-ends_with(".y")) %>%
-#   select(-ends_with(".x")) 
-# 
-# ### Merge all with number of obs. bigger than 10775 ###
-# bigger_n <- names(obs_gem_list[obs_gem_list > 10775])
-# lst_bigger <- gem_list$data[bigger_n]
-# 
-# # Keep only obs. from housing_id    
-# lst_bigger <- lapply(lst_bigger, function(df) {
-#   df %>% filter(ID %in% housing_id)
-# })
-# 
-# #common_n <- names(obs_gem_list[obs_gem_list == 10775])
-# #lst_same <- gem_list$data[common_n]
-# 
-# merged_gem_d2 <- lst_bigger %>% 
-#   reduce(left_join, by="ID") %>%
-#   select(-ends_with(".y")) %>%
-#   select(-ends_with(".x"))
-# 
-# ### Merge gem data together ###
-# merged_gem <- merged_gem_d1 %>%
-#   left_join(merged_gem_d2, by="ID")
-# 
-# summary(merged_gem)
-# 
-# ### Merge all with number of obs. lower than 10775 ###
-# lower_n <- names(obs_gem_list[obs_gem_list < 10775])
-# lst_lower <- gem_list$data[lower_n]
-################################################################################
 
 merged_gem <- gem_list$data %>%
   reduce(left_join, by="ID") %>%
   select(-ends_with(".y")) %>%
   select(-ends_with(".x")) %>%
   filter(ID %in% housing_id) %>%
-  full_join(gem_Rents, by="ID") 
+  full_join(gem_Rents, by="ID") %>%
+  arrange(ID) %>%
+  mutate(ID_K = if_else(ID >= 10000000,
+                        substr(format(ID, scientific = FALSE, trim=T), 1, 5),
+                        substr(format(ID, scientific = FALSE, trim=T), 1, 4))) %>%
+  mutate(ID_K = as.numeric(ID_K))
 
-summary(merged_gem)
-
-### KRE; Kreise (Code funktioniert nicht) ######################################
+### KRE; Kreise ###
 
 # Retrieve meta data
 meta_kre <- kre_list_final$meta
@@ -553,34 +511,93 @@ meta_kre <- rbind(meta_kre, meta_kre_vote)
 write_xlsx(meta_kre, path=paste0(path_work, "/Data_Info/Meta_kre.xlsx"))
 rm(meta_kre_vote, meta_kre)
 
-### Check number of obs. per list ###
+# Check number of obs. per list
 (obs_kre_list_final <- sapply(kre_list_final$data, nrow))
 (obs_kre_list_final_vote <- sapply(kre_list_final$data_vote, nrow))
 
-### Merge all ###
+# Merge all
 merged_kre <- kre_list_final$data %>%
   reduce(left_join, by="ID") %>%
   select(-ends_with(".y")) %>%
-  select(-ends_with(".x"))
+  select(-ends_with(".x")) %>%
+  left_join(kre_Rents, by="ID") %>%
+  rename(ID_K = ID) %>%
+  arrange(ID_K)
 
-test <- merged_kre %>%
-  filter(is.na(Emp.Helper))
+# Replace all NAs with zero 
+merged_kre[is.na(merged_kre)] <- 0
 
 summary(merged_kre)
 
+### Adjust INKAR data ##########################################################
 
-merged_kre_df_d2 <- lst_same %>% 
-  reduce(left_join, by="ID") %>%
-  select(-ends_with(".y")) %>%
-  select(-ends_with(".x")) 
+### Create Share of people equal to 18 and below 65 ###
+merged_kre <- merged_kre %>%
+  mutate(Age.18.65 = 100 - Age.below.6 - Age.6.18 - Age.65)
 
-merged_kre_df <- full_join(merged_kre_df_d1, merged_kre_df_d2, by="ID")
-rm(merged_kre_df_d1, merged_kre_df_d2)
+merged_gem <- merged_gem %>%
+  mutate(Age.18.65 = 100 - Age.below.6 - Age.6.18 - Age.65)
+
+### Impute GEM NAs with KRE data ###
+
+vars_to_fill <- setdiff(names(merged_gem), c("ID", "ID_K"))
+
+merged_filled <- merged_gem %>%
+  left_join(
+    merged_kre %>%
+      select(all_of(c("ID_K", vars_to_fill))) %>%
+      rename_with(~ paste0(., "_kre"), vars_to_fill),
+    by = "ID_K"
+  ) %>%
+  mutate(across(all_of(vars_to_fill),
+                ~ ifelse(is.na(.x), get(paste0(cur_column(), "_kre")), .x)
+  )) %>%
+  select(-ends_with("_kre"))
+
+summary(merged_gem)
+summary(merged_filled)
+
+### Merge with _add data ###
+
+# GEM data
+merged_gem_final <- merged_filled %>%
+  left_join(gem_add, by="ID") %>%
+  relocate(ID, ID_K, Name)
+
+
+### Hinweis: Es gab 2023 664 Gemeinden, die sich den Namen mit einer anderen Gemeinde teilten 
+n_occur <- data.frame(table(merged_gem$Name))
+
+n_occur[n_occur$Freq > 1,]
+
+test <- merged_gem[merged_gem$Name %in% n_occur$Var1[n_occur$Freq > 1],] %>%
+  arrange(Name)
+
+summary(merged_gem)
+
+# KRE data
+merged_kre_final <- merged_kre %>%
+  left_join(kre_add, by="ID_K") %>%
+  relocate(ID_K, Name)
+
+### Save INKAR data ############################################################
+
+write_rds(merged_gem_final, file=paste0(path_data, "/Manipulated/merged_gem_final.rds"))
+write_csv(merged_gem_final, file=paste0(path_data, "/Manipulated/merged_gem_final.csv"))
+
+write_rds(merged_kre_final, file=paste0(path_data, "/Manipulated/merged_kre_final.rds"))
+write_csv(merged_kre_final, file=paste0(path_data, "/Manipulated/merged_kre_final.csv"))
+
+# read_rds(paste0(path_data, "/Manipulated/merged_gem_final.rds"))
+# read_rds(paste0(path_data, "/Manipulated/merged_kre_final.rds"))
 
 ## -----------------------------------------------------------------------------
-## Adjust
+## IOER Monitor Data
 ## -----------------------------------------------------------------------------
 
-# Create Share of people equal to 18 and below 65
+## -----------------------------------------------------------------------------
+## Data Air Quality
+## -----------------------------------------------------------------------------
+
 
 ## -----------------------------------------------------------------------------
