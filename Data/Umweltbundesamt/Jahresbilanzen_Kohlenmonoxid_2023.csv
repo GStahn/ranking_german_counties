@@ -1,0 +1,79 @@
+Bundesland / Messnetz;Stationscode;Stationsname;Stationsumgebung;Art der Station;Jahresmittelwert in mg/mÂ³;Zahl der Tage mit höchstem 8-Stunden-Mittelwert über 10 mg/m³;Jahresmittelwert in mg/m³
+Brandenburg;DEBB112;Wildau;vorstädtisches Gebiet;Hintergrund;0,21;0;0,21
+Brandenburg;DEBB110;Dallgow-Döberitz;vorstädtisches Gebiet;Hintergrund;0,19;0;0,19
+UBA;DEUB044;Zugspitze Schneefernerhaus;ländlich abgelegen;Hintergrund;0,14;0;0,14
+UBA;DEUB004;Schauinsland;ländlich regional;Hintergrund;0,16;0;0,16
+Sachsen-Anhalt;DEST011;Wernigerode/Bahnhof;städtisches Gebiet;Hintergrund;0,24;0;0,24
+Rheinland-Pfalz;DERP025;Wörth-Marktplatz;städtisches Gebiet;Hintergrund;0,22;0;0,22
+Rheinland-Pfalz;DERP022;Bad Kreuznach-Bosenheimer Straße;städtisches Gebiet;Hintergrund;0,25;0;0,25
+Rheinland-Pfalz;DERP021;Neuwied-Hafenstraße;städtisches Gebiet;Hintergrund;0,21;0;0,21
+Rheinland-Pfalz;DERP019;Kaiserslautern-Rathausplatz;städtisches Gebiet;Hintergrund;0,23;0;0,23
+Rheinland-Pfalz;DERP007;Mainz-Mombach;städtisches Gebiet;Hintergrund;0,23;0;0,23
+Rheinland-Pfalz;DERP001;Ludwigshafen-Oppau;städtisches Gebiet;Hintergrund;0,21;0;0,21
+Hessen;DEHE018;Raunheim;städtisches Gebiet;Hintergrund;0,25;0;0,25
+Bremen;DEHB012;Bremen-Oslebshausen;städtisches Gebiet;Hintergrund;0,29;0;0,29
+Bremen;DEHB005;Bremerhaven-Hansastraße;städtisches Gebiet;Hintergrund;0,26;0;0,26
+Bremen;DEHB001;Bremen-Mitte;städtisches Gebiet;Hintergrund;0,3;0;0,3
+Bayern;DEBY099;Augsburg/LfU;vorstädtisches Gebiet;Hintergrund;0,23;0;0,23
+Brandenburg;DEBB086;Blankenfelde-Mahlow;vorstädtisches Gebiet;Hintergrund;0,2;0;0,2
+Saarland;DESL003;Dillingen City;städtisches Gebiet;Industrie;0,37;0;0,37
+Rheinland-Pfalz;DERP003;Ludwigshafen-Mundenheim;städtisches Gebiet;Industrie;0,26;0;0,26
+Niedersachsen;DENI070;Salzgitter-Drütte;ländliches Gebiet;Industrie;0;0,21;
+Bremen;DEHB013;Bremen-Hasenbüren;ländlich regional;Industrie;0,3;0;0,3
+Brandenburg;DEBB032;Eisenhüttenstadt;vorstädtisches Gebiet;Industrie;0,23;0;0,23
+Bayern;DEBY200;Passau/Angerstr.;städtisches Gebiet;Verkehr;0,32;0;0,32
+Mecklenburg-Vorpommern;DEMV059;Schwerin Obotr. West;städtisches Gebiet;Verkehr;0,27;0;0,27
+Bayern;DEBY198;Ingolstadt/Münchener Str.;städtisches Gebiet;Verkehr;0,3;0;0,3
+Sachsen-Anhalt;DEST133;Halle/Riebeckplatz;städtisches Gebiet;Verkehr;0,22;0;0,22
+Sachsen-Anhalt;DEST108;Weißenfels/Am Krug;städtisches Gebiet;Verkehr;0,22;0;0,22
+Sachsen-Anhalt;DEST103;Magdeburg Schleinufer;städtisches Gebiet;Verkehr;0,29;0;0,29
+Sachsen-Anhalt;DEST092;Wittenberg/Dessauer Strasse;städtisches Gebiet;Verkehr;0,27;0;0,27
+Saarland;DESL020;Saarbrücken-Verkehr;städtisches Gebiet;Verkehr;0,38;0;0,38
+Rheinland-Pfalz;DERP041;Ludwigshafen-Heinigstraße;städtisches Gebiet;Verkehr;0,31;0;0,31
+Rheinland-Pfalz;DERP024;Koblenz-Friedrich-Ebert-Ring;städtisches Gebiet;Verkehr;0,27;0;0,27
+Rheinland-Pfalz;DERP023;Worms-Hagenstraße;städtisches Gebiet;Verkehr;0,24;0;0,24
+Rheinland-Pfalz;DERP020;Trier-Ostallee;städtisches Gebiet;Verkehr;0,24;0;0,24
+Rheinland-Pfalz;DERP011;Mainz-Rheinallee;städtisches Gebiet;Verkehr;0,31;0;0,31
+Rheinland-Pfalz;DERP010;Mainz-Parcusstraße;städtisches Gebiet;Verkehr;0,31;0;0,31
+Niedersachsen;DENI157;Wolfsburg Heßlinger Straße;städtisches Gebiet;Verkehr;0;0,26;
+Niedersachsen;DENI143;Oldenburg Heiligengeistwall;städtisches Gebiet;Verkehr;0;0,32;
+Niedersachsen;DENI075;Braunschweig-Verkehr;städtisches Gebiet;Verkehr;0;0,3;
+Niedersachsen;DENI068;Göttingen-Verkehr;städtisches Gebiet;Verkehr;0;0,3;
+Niedersachsen;DENI067;Osnabrück-Verkehr;städtisches Gebiet;Verkehr;0;0,35;
+Niedersachsen;DENI066;Hildesheim Verkehr;städtisches Gebiet;Verkehr;0;0,41;
+Niedersachsen;DENI048;Hannover Verkehr;städtisches Gebiet;Verkehr;0;0,29;
+Mecklenburg-Vorpommern;DEMV058;Neubrandenburg Woldegker Straße;städtisches Gebiet;Verkehr;0,28;0;0,28
+Mecklenburg-Vorpommern;DEMV025;Stralsund-Knieperdamm;städtisches Gebiet;Verkehr;0,23;0;0,23
+Mecklenburg-Vorpommern;DEMV022;Rostock-Holbeinplatz;städtisches Gebiet;Verkehr;0,25;0;0,25
+Hamburg;DEHH070;Hamburg Max-Brauer-Allee II (Straße);städtisches Gebiet;Verkehr;0,29;0;0,29
+Hamburg;DEHH068;Hamburg Habichtstraße;städtisches Gebiet;Verkehr;0,33;0;0,33
+Hessen;DEHE131;Limburg Schiede;städtisches Gebiet;Verkehr;0,38;0;0,38
+Hessen;DEHE063;Heppenheim Lehrstraße;städtisches Gebiet;Verkehr;0,3;0;0,3
+Hessen;DEHE062;Marburg Universitätsstraße;städtisches Gebiet;Verkehr;0,25;0;0,25
+Hessen;DEHE061;Gießen Westanlage;städtisches Gebiet;Verkehr;0,39;0;0,39
+Hessen;DEHE049;Kassel Fünffensterstraße;städtisches Gebiet;Verkehr;0,31;0;0,31
+Hessen;DEHE037;Wiesbaden Ringkirche;städtisches Gebiet;Verkehr;0,32;0;0,32
+Bremen;DEHB006;Bremen-Dobben;städtisches Gebiet;Verkehr;0,35;0;0,35
+Bayern;DEBY120;Nürnberg/Von-der-Tann-Straße;städtisches Gebiet;Verkehr;0,3;0;0,3
+Bayern;DEBY119;Würzburg/Stadtring Süd;städtisches Gebiet;Verkehr;0,25;0;0,25
+Bayern;DEBY115;München/Landshuter Allee;städtisches Gebiet;Verkehr;0,36;0;0,36
+Bayern;DEBY110;Augsburg/Karlstraße;städtisches Gebiet;Verkehr;0,31;0;0,31
+Bayern;DEBY063;Regensburg/Rathaus;städtisches Gebiet;Verkehr;0,28;0;0,28
+Bayern;DEBY037;München/Stachus;städtisches Gebiet;Verkehr;0,29;0;0,29
+Bayern;DEBY035;Lindau (Bodensee)/Friedrichshafener Straße;städtisches Gebiet;Verkehr;0,24;0;0,24
+Bayern;DEBY028;Kelheim/Regensburger Straße;städtisches Gebiet;Verkehr;0,27;0;0,27
+Bayern;DEBY014;Coburg/Lossaustraße;städtisches Gebiet;Verkehr;0,24;0;0,24
+Bayern;DEBY006;Augsburg/Königsplatz;städtisches Gebiet;Verkehr;0,25;0;0,25
+Bayern;DEBY001;Ansbach/Residenzstraße;städtisches Gebiet;Verkehr;0,26;0;0,26
+Baden-Württemberg;DEBW156;Schramberg Oberndorfer Straße;städtisches Gebiet;Verkehr;0,21;0;0,21
+Baden-Württemberg;DEBW152;Heilbronn Weinsberger Straße-Ost;städtisches Gebiet;Verkehr;0,26;0;0,26
+Baden-Württemberg;DEBW147;Reutlingen Lederstraße-Ost;städtisches Gebiet;Verkehr;0,27;0;0,27
+Baden-Württemberg;DEBW125;Pfinztal Karlsruher Straße;vorstädtisches Gebiet;Verkehr;0,21;0;0,21
+Baden-Württemberg;DEBW122;Freiburg Schwarzwaldstraße;städtisches Gebiet;Verkehr;0,17;0;0,17
+Baden-Württemberg;DEBW099;Stuttgart Arnulf-Klett-Platz;städtisches Gebiet;Verkehr;0,19;0;0,19
+Baden-Württemberg;DEBW098;Mannheim Friedrichsring;städtisches Gebiet;Verkehr;0,19;0;0,19
+Baden-Württemberg;DEBW080;Karlsruhe Reinhold-Frank-Straße;städtisches Gebiet;Verkehr;0,28;0;0,28
+Berlin;DEBE065;Berlin Frankfurter Allee;städtisches Gebiet;Verkehr;0,3;0;0,3
+Berlin;DEBE061;Berlin Schildhornstraße;städtisches Gebiet;Verkehr;0,27;0;0,27
+Brandenburg;DEBB054;Potsdam, Zeppelinstr.;städtisches Gebiet;Verkehr;0,27;0;0,27
+Brandenburg;DEBB045;Frankfurt (Oder), Leipziger Str.;städtisches Gebiet;Verkehr;0,3;0;0,3
