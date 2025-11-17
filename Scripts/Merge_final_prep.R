@@ -127,12 +127,6 @@ normalized_data_LK <- data_LK %>%
 write_rds(normalized_data_LK, file = paste0(path_data, "/Manipulated/normalized_data_LK_2023.rds"))
 write_csv(normalized_data_LK, file = paste0(path_data, "/Manipulated/normalized_data_LK_2023.csv"))
 
-## -----------------------------------------------------------------------------
-
-
-
-
-
 
 
 ## -----------------------------------------------------------------------------
