@@ -81,8 +81,8 @@ ground_kre <- read_rds(file = paste0(path_data, "/Manipulated/ground_kre.rds")) 
   dplyr::select(!c("Name", "Lfd"))
 
 data_kre <- pollution_kre %>%
-  left_join(inkar_kre, by="ID_K") %>%
   left_join(ground_kre, by="ID_K") %>%
+  left_join(inkar_kre, by="ID_K") %>%
   rename(LK_ID= Kreisfreie.Stadt...Landkreis..2023..Kennziffer) %>%
   rename(LK_ID_Name= Kreisfreie.Stadt...Landkreis..2023..Name) %>%
   relocate(ID_K, LK_ID, LK_ID_Name, Name)
@@ -126,7 +126,5 @@ normalized_data_LK <- data_LK %>%
 
 write_rds(normalized_data_LK, file = paste0(path_data, "/Manipulated/normalized_data_LK_2023.rds"))
 write_csv(normalized_data_LK, file = paste0(path_data, "/Manipulated/normalized_data_LK_2023.csv"))
-
-
 
 ## -----------------------------------------------------------------------------

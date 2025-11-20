@@ -7,7 +7,7 @@
 ## Author: Gerrit Stahn
 ##
 ## Date Created: 2025-10-21
-## Last Update: 2025-11-11
+## Last Update: 2025-11-20
 ##
 ## Copyright (c) Gerrit Stahn, 2025
 ## Email: gerrit.stahn@wiwi.uni-halle.de
@@ -398,7 +398,7 @@ kre_add <- read_xlsx(path=paste0(path_data, "/INKAR/BBSR_Raumgliederungen_Refere
                         substr(format(Kreise..2023..Kennziffer, scientific = FALSE, trim=T), 1, 4))) %>%
   mutate(ID_K = as.numeric(ID_K)) %>%
   rename(Name=Kreise..2023..Name) %>%
-  select(!Kreise..2023..Kennziffer) %>%
+  select(ID_K, Name, Kreisfreie.Stadt...Landkreis..2023..Kennziffer, Kreisfreie.Stadt...Landkreis..2023..Name) %>%
   relocate(Name, ID_K)
 
 ### Get county identifier ######################################################
@@ -419,13 +419,13 @@ county_data <- read_excel(path = paste0(path_data, "/Destatis/31122023_Auszug_GV
   filter(wtf==1) %>%
   select(!wtf)
 
-### Get GEM names + additional data ############################################
+### Get GEM names ##############################################################
 
 gem_add <- read_xlsx(path=paste0(path_data, "/INKAR/BBSR_Raumgliederungen_Referenzen_2023.xlsx"), 
                      sheet="Gemeindereferenz (inkl. Kreise)", skip=1, .name_repair = "universal") %>%
   rename(ID= Gemeinden..2023..Kennziffer) %>%
   rename(Name=Gemeinden..2023..Name) %>%
-  select(!(Gemeindekennziffer..RS.)) %>%
+  select(ID, Name) %>%
   mutate(ID = as.numeric(ID)) %>%
   filter(ID %in% housing_id)
 
