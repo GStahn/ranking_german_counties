@@ -1,0 +1,25 @@
+# A tibble: 400 × 3
+    ID_K Index Name                         
+   <dbl> <dbl> <chr>                        
+ 1  9184  8.26 München                      
+ 2  9562  7.88 Erlangen                     
+ 3  9162  7.67 München, Landeshauptstadt    
+ 4  8115  7.53 Böblingen                    
+ 5  8111  7.47 Stuttgart, Stadtkreis        
+ 6  3103  7.42 Wolfsburg, Stadt             
+ 7  9161  7.33 Ingolstadt                   
+ 8  9188  6.98 Starnberg                    
+ 9  6434  6.90 Hochtaunuskreis              
+10  9377  6.63 Tirschenreuth                
+11  6411  6.55 Darmstadt, Wissenschaftsstadt
+12  6436  6.52 Main-Taunus-Kreis            
+13  8435  6.48 Bodenseekreis                
+14  6412  6.45 Frankfurt am Main, Stadt     
+15  8211  6.44 Baden-Baden, Stadtkreis      
+16  9362  6.40 Regensburg, Stadt            
+17  8421  6.39 Ulm, Stadtkreis              
+18  8327  6.38 Tuttlingen                   
+19  8426  6.31 Biberach                     
+20  8125  6.30 Heilbronn                    
+# ℹ 380 more rows
+# ℹ Use `print(n = ...)` to see more rows

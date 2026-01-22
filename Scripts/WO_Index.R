@@ -7,7 +7,7 @@
 ## Author: Gerrit Stahn
 ##
 ## Date Created: 2025-11-20
-## Last Update: 2025-11-20
+## Last Update: 2026-01-20
 ##
 ## Copyright (c) Gerrit Stahn, 2025
 ## Email: gerrit.stahn@wiwi.uni-halle.de
@@ -54,67 +54,89 @@ normalized_data_LK <- read_rds(file = paste0(path_data, "/Manipulated/normalized
 
 
 
-### Weights ###
+### Test Weights ###
 var_vec <- names(normalized_data_GEM)
 
 weights <- c(
-  "no2_avg" = -0.8,
-  "pm25_avg" = -0.8,
-  "pm10_avg" = -0.8,
-  "co_avg" = -0.8,
-  "so2_avg" = -0.8,
-  "pb_avg" = -0.8,
-  "Population" = 0.6,
-  "GDP.perCapita" = 0.8,
-  "Expert.Jobs" = 0.6,
-  "Rent.NetAvg" = -0.8,
-  "New.Housing.per.Capita" = 0.6,
-  "Migration.Balance" = 0.5,
-  "Purchasing.Power" = 0.9,
-  "Recreation.Area.per.Capita" = 0.9,
-  "Forest.Area" = 0.8,
-  "Water.Area" = 0.7,
-  "Investment.Allocations" = 0.6,
-  "Population.Density" = -0.5,
-  "Highway.Access" = 0.5,
-  "Airport.Access" = 0.8,
-  "Supermarket.Access" = 0.8,
-  "Pharmacy.Access" = 0.5,
-  "Broadband.100Mbps" = 0.8,
-  "Public.Transport.Access" = 0.9,
-  "Traffic.Accidents" = -0.4,
-  "Child.Poverty" = -0.9,
-  "Daycare" = 0.5,
-  "Broadband.1000Mbps" = 0.7,
-  "Settlement.Area.in.Flood.Zone" = -0.7,
-  "Sealed.Area.per.Capita" = -0.8,
-  ### New ###
-  "Age.below.6" = 0, 
-  "Age.6.18" = 0.5,
-  "Age.65" = 0, 
-  "Age.18.65" = 0.8, 
-  "Permit.Housing.perCapita"  = 0.8, 
-  "School.Primary" = 0, 
-  "School.SpecialEdu" = 0, 
-  "Highspeed.Rail.Access" = 0.8, 
-  "Doc.GP" = 0.7, 
-  "Broadband.50Mbps" = 0.6, 
-  "Emp.Rate" = 0.8, 
-  "Emp.Rate.Women" = 0.8, 
-  "Unemp.Men" = -0.8,
+  "Settlement.Area.in.Flood.Zone" =  0.13,
+  "Sealed.Area.per.Capita"        = -0.42,
+  "no2_avg"                       =  0.77,
+  "pm25_avg"                      = -0.09,
+  "pm10_avg"                      =  0.34,
+  "co_avg"                        = -0.88,
+  "so2_avg"                       =  0.51,
+  "pb_avg"                        = -0.26,
+  "Population"                    =  0.04,
+  "New.Housing.per.Capita"        = -0.67,
+  "Permit.Housing.perCapita"      =  0.58,
+  "Age.below.6"                   = -0.12,
+  "Age.6.18"                      =  0.91,
+  "Age.65"                        = -0.31,
+  "School.Primary"                =  0.22,
+  "School.SpecialEdu"             = -0.74,
+  "Migration.Balance"             =  0.66,
+  "Purchasing.Power"              = -0.18,
+  "Recreation.Area.per.Capita"    =  0.83,
+  "Forest.Area"                   = -0.55,
+  "Water.Area"                    =  0.07,
+  "Population.Density"            = -0.93,
+  "Highway.Access"                =  0.49,
+  "Airport.Access"                = -0.36,
+  "Highspeed.Rail.Access"         =  0.95,
+  "Supermarket.Access"            = -0.21,
+  "Doc.GP"                        =  0.62,
+  "Pharmacy.Access"               = -0.47,
+  "Broadband.50Mbps"              =  0.28,
+  "Broadband.100Mbps"             = -0.81,
+  "Broadband.1000Mbps"            =  0.69,
+  "Public.Transport.Access"       = -0.14,
+  "Traffic.Accidents"             =  0.57,
+  "Child.Poverty"                 = -0.99,
+  "Daycare"                       =  0.11,
+  "Emp.Rate"                      = -0.63,
+  "Emp.Rate.Women"                =  0.41,
+  "Unemp.Men"                     = -0.06,
+  "Investment.Allocations"        =  0.87,
+  "Land.Price"                    = -0.39,
+  "Emp.Primary"                   =  0.02,
+  "Emp.Secundary"                 = -0.52,
+  "Emp.Tertiary"                  =  0.73,
+  "Emp.Creative"                  = -0.24,
+  "Emp.AO.Academic"               =  0.90,
+  "Emp.AO.Vocational"             = -0.65,
+  "Emp.AO.NoTrain"                =  0.19,
+  "Emp.Expert"                    = -0.84,
+  "Emp.Specialist"                =  0.56,
+  "Emp.Professional"              = -0.33,
+  "Emp.Helper"                    =  0.08,
+  "Charg.Points.per100EV"         = -0.71,
+  "Share.Car.Hybrid"              =  0.27,
+  "Share.Car.Electro"             = -0.16,
+  "Apprent.Positions"             =  0.64,
+  "Apprent"                       = -0.48,
+  "Share.Women.Council"           =  0.35,
+  "Emp.Rate.Foreign"              = -0.04,
+  "Income.Median.Age25to54"       =  0.78,
+  "Income.Median.Age55to64"       = -0.29,
+  "Pay.Gap.Gender"                =  0.46,
+  "GDP.perCapita"                 = -0.59,
+  "Rent.NetAvg"                   =  0.12,
+  "Age.18.65"                     = -0.91
 )
 
-weights <- names(data.frame(as.list(weights)))
+
+# Ensures the correct order later on
+order <- names(weights)
+
+weights_vars <- names(data.frame(as.list(weights)))
 
 ### Delete later ###
 `%nin%` = Negate(`%in%`)
 
 names <- var_vec %nin% weights
 names2 <- weights %nin% var_vec
-(var_vec[names])
-(weights[names2])
-
-################################
+(vars_noweights <- var_vec[names])
+(vars_onlyKRE <- weights[names2])
 
 ### Test ###
 # test <- tibble(a=seq(3,9, by=3), b=seq(2, 6, by=2), c=seq(1,3))
@@ -132,20 +154,17 @@ names2 <- weights %nin% var_vec
 #   ) %>%
 #   ungroup()
 
-# Ensures the correct order
-order <- names(weights)
-
 ### All K: Create index data ###
-n <- length(names(normalized_data))
+n <- length(names(normalized_data_KRE))
 
-names_all <- normalized_data %>%
-  dplyr::select(Region, ID_K)
+names_all <- normalized_data_KRE %>%
+  dplyr::select(Name, ID_K)
 
-index <- normalized_data %>%
-  relocate(order, .after="Region") %>%
+index <- normalized_data_KRE %>%
+  relocate(order, .after="Name") %>%
   rowwise() %>%
   mutate(
-    Index = sum(c_across(6:n) * unlist(weights)),
+    Index = sum(c_across(5:n) * unlist(weights)),
     .keep = "unused"
   ) %>%
   ungroup() %>%
@@ -153,11 +172,9 @@ index <- normalized_data %>%
   left_join(names_all, by="ID_K") %>%
   arrange(desc(Index))
 
-sink(paste0(path_work, "/Index_output_all_n20.txt"), append=FALSE, split=TRUE)
+sink(paste0(path_work, "/Index_output_all_n20_randomweights.txt"), append=FALSE, split=TRUE)
 index %>% print(n=20)
 sink()
-
-write_rds(index, file = paste0(path_data, "/Manipulated/index_all_2020.rds"))
 
 ### SK: Create index data ###
 rm(list=setdiff(ls(), c("path_data", "path_work", "normalized_data", "normalized_data_SK", "normalized_data_LK", "weights", "order", lsf.str())))
@@ -165,13 +182,13 @@ rm(list=setdiff(ls(), c("path_data", "path_work", "normalized_data", "normalized
 n <- length(names(normalized_data_SK))
 
 names_SK <- normalized_data_SK %>%
-  dplyr::select(Region, ID_K)
+  dplyr::select(Name, ID_K)
 
 index_SK <- normalized_data_SK %>%
-  relocate(order, .after="Region") %>%
+  relocate(order, .after="Name") %>%
   rowwise() %>%
   mutate(
-    Index = sum(c_across(6:n) * unlist(weights)),
+    Index = sum(c_across(5:n) * unlist(weights)),
     .keep = "unused"
   ) %>%
   ungroup() %>%
@@ -179,11 +196,9 @@ index_SK <- normalized_data_SK %>%
   left_join(names_SK, by="ID_K") %>%
   arrange(desc(Index))
 
-sink(paste0(path_work, "/Index_output_SK_n20.txt"), append=FALSE, split=TRUE)
+sink(paste0(path_work, "/Index_output_SK_n20_randomweights.txt"), append=FALSE, split=TRUE)
 index_SK %>% print(n=20)
 sink()
-
-write_rds(index_SK, file = paste0(path_data, "/Manipulated/index_SK_2020.rds"))
 
 ### LK: Create index data ###
 rm(list=setdiff(ls(), c("path_data", "path_work", "normalized_data", "normalized_data_SK", "normalized_data_LK", "weights", "order", lsf.str())))
@@ -191,13 +206,13 @@ rm(list=setdiff(ls(), c("path_data", "path_work", "normalized_data", "normalized
 n <- length(names(normalized_data_LK))
 
 names_LK <- normalized_data_LK %>%
-  dplyr::select(Region, ID_K)
+  dplyr::select(Name, ID_K)
 
 index_LK <- normalized_data_LK %>%
-  relocate(order, .after="Region") %>%
+  relocate(order, .after="Name") %>%
   rowwise() %>%
   mutate(
-    Index = sum(c_across(6:n) * unlist(weights)),
+    Index = sum(c_across(5:n) * unlist(weights)),
     .keep = "unused"
   ) %>%
   ungroup() %>%
@@ -205,11 +220,9 @@ index_LK <- normalized_data_LK %>%
   left_join(names_LK, by="ID_K") %>%
   arrange(desc(Index))
 
-sink(paste0(path_work, "/Index_output_LK_n20.txt"), append=FALSE, split=TRUE)
+sink(paste0(path_work, "/Index_output_LK_n20_randomweights.txt"), append=FALSE, split=TRUE)
 index_LK %>% print(n=20)
 sink()
-
-write_rds(index_LK, file = paste0(path_data, "/Manipulated/index_LK_2020.rds"))
 
 ## -----------------------------------------------------------------------------
 ## ggplots

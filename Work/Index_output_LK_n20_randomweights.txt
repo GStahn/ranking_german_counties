@@ -1,0 +1,25 @@
+# A tibble: 294 × 3
+    ID_K Index Name              
+   <dbl> <dbl> <chr>             
+ 1  6436 2.23  Main-Taunus-Kreis 
+ 2  6434 1.85  Hochtaunuskreis   
+ 3  5154 1.55  Kleve             
+ 4  8416 1.30  Tübingen          
+ 5  7339 1.26  Mainz-Bingen      
+ 6  9175 1.22  Ebersberg         
+ 7  5162 1.20  Rhein-Kreis Neuss 
+ 8 12064 1.19  Märkisch-Oderland 
+ 9  5170 1.18  Wesel             
+10  9184 1.13  München           
+11  9174 1.13  Dachau            
+12  5558 1.13  Coesfeld          
+13  9178 1.06  Freising          
+14  9188 1.04  Starnberg         
+15  5570 1.01  Warendorf         
+16  9181 0.992 Landsberg am Lech 
+17  5166 0.970 Viersen           
+18 12063 0.953 Havelland         
+19  9179 0.948 Fürstenfeldbruck  
+20 12069 0.939 Potsdam-Mittelmark
+# ℹ 274 more rows
+# ℹ Use `print(n = ...)` to see more rows

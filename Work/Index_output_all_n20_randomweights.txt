@@ -1,0 +1,25 @@
+# A tibble: 400 × 3
+    ID_K Index Name                       
+   <dbl> <dbl> <chr>                      
+ 1  6436  2.24 Main-Taunus-Kreis          
+ 2 12054  2.04 Potsdam, Stadt             
+ 3  9464  1.81 Hof, Stadt                 
+ 4  6434  1.77 Hochtaunuskreis            
+ 5 12053  1.59 Frankfurt (Oder), Stadt    
+ 6  5154  1.47 Kleve                      
+ 7  8416  1.43 Tübingen                   
+ 8  5314  1.41 Bonn, Stadt                
+ 9  5162  1.40 Rhein-Kreis Neuss          
+10  9363  1.37 Weiden i.d.OPf.            
+11 14511  1.36 Chemnitz, Stadt            
+12  5158  1.36 Mettmann                   
+13  5111  1.34 Düsseldorf, Stadt          
+14  5117  1.33 Mülheim an der Ruhr, Stadt 
+15  5170  1.30 Wesel                      
+16  6414  1.29 Wiesbaden, Landeshauptstadt
+17  9184  1.26 München                    
+18 14612  1.25 Dresden, Stadt             
+19  5512  1.22 Bottrop, Stadt             
+20 15002  1.20 Halle (Saale), Stadt       
+# ℹ 380 more rows
+# ℹ Use `print(n = ...)` to see more rows
