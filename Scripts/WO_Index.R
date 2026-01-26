@@ -7,7 +7,7 @@
 ## Author: Gerrit Stahn
 ##
 ## Date Created: 2025-11-20
-## Last Update: 2026-01-20
+## Last Update: 2026-01-26
 ##
 ## Copyright (c) Gerrit Stahn, 2025
 ## Email: gerrit.stahn@wiwi.uni-halle.de
@@ -42,7 +42,7 @@ path_work <- "/Users/apxww/Desktop/GitHub/ranking_german_counties/Work"
 ## Prep. data
 ## -----------------------------------------------------------------------------
 
-### Load data ###
+### Load data ##################################################################
 normalized_data_GEM <- read_rds(file = paste0(path_data, "/Manipulated/normalized_data_gem_2023.rds")) %>%
   relocate(ID, ID_K, Name, Settlement.Area.in.Flood.Zone, Sealed.Area.per.Capita)
 normalized_data_KRE <- read_rds(file = paste0(path_data, "/Manipulated/normalized_data_kre_2023.rds")) %>%
@@ -54,8 +54,9 @@ normalized_data_LK <- read_rds(file = paste0(path_data, "/Manipulated/normalized
 
 
 
-### Test Weights ###
-var_vec <- names(normalized_data_GEM)
+### Test with random Weights ###################################################
+var_vec_GEM <- names(normalized_data_GEM)
+var_vec_KRE <- names(normalized_data_KRE)
 
 weights <- c(
   "Settlement.Area.in.Flood.Zone" =  0.13,
@@ -124,37 +125,28 @@ weights <- c(
   "Age.18.65"                     = -0.91
 )
 
+### Vector with all variables and its weights in GEM data ###
+weights_inGEM <- weights[names(weights) %in% var_vec_GEM]
+
+# ### Delete later ##############################################################
+# `%nin%` = Negate(`%in%`)
+# 
+# onlyKRE1 <- names(weights) %nin% var_vec_GEM
+# (onlyKRE <- var_vec_KRE[onlyKRE1])
+# 
+# # Test 
+# onlyKRE %in% names(weights) # Only LK_ID_Name and Name are missing - fine
+# 
+# names(weights) %nin% c(var_vec_KRE,var_vec_GEM) # FALSE for all - fine 
 
 # Ensures the correct order later on
 order <- names(weights)
+order_GEM <- names(weights_inGEM)
 
 weights_vars <- names(data.frame(as.list(weights)))
+weights_vars_GEM <- names(data.frame(as.list(weights_inGEM)))
 
-### Delete later ###
-`%nin%` = Negate(`%in%`)
-
-names <- var_vec %nin% weights
-names2 <- weights %nin% var_vec
-(vars_noweights <- var_vec[names])
-(vars_onlyKRE <- weights[names2])
-
-### Test ###
-# test <- tibble(a=seq(3,9, by=3), b=seq(2, 6, by=2), c=seq(1,3))
-# weights <- c(
-#   a <- -0.5,
-#   b<- 0.3,
-#   c<- 0.2
-# )
-# 
-# index <- test %>%
-#   rowwise() %>%
-#   mutate(
-#     Index = sum(c_across("a":"c") * unlist(weights)),
-#     .keep = "unused"
-#   ) %>%
-#   ungroup()
-
-### All K: Create index data ###
+### All K: Create index data ###################################################
 n <- length(names(normalized_data_KRE))
 
 names_all <- normalized_data_KRE %>%
@@ -176,8 +168,10 @@ sink(paste0(path_work, "/Index_output_all_n20_randomweights.txt"), append=FALSE,
 index %>% print(n=20)
 sink()
 
-### SK: Create index data ###
-rm(list=setdiff(ls(), c("path_data", "path_work", "normalized_data", "normalized_data_SK", "normalized_data_LK", "weights", "order", lsf.str())))
+write_rds(index, path=paste0(path_data, "/Manipulated/index_allKRE_2025.rds"))
+
+### SK: Create index data ######################################################
+rm(list=setdiff(ls(), c("path_data", "path_work", "normalized_data_GEM", "normalized_data_KRE", "normalized_data_SK", "normalized_data_LK", "weights", "weights_inGEM", "order", "order_GEM", lsf.str())))
 
 n <- length(names(normalized_data_SK))
 
@@ -200,8 +194,10 @@ sink(paste0(path_work, "/Index_output_SK_n20_randomweights.txt"), append=FALSE, 
 index_SK %>% print(n=20)
 sink()
 
-### LK: Create index data ###
-rm(list=setdiff(ls(), c("path_data", "path_work", "normalized_data", "normalized_data_SK", "normalized_data_LK", "weights", "order", lsf.str())))
+write_rds(index_SK, path=paste0(path_data, "/Manipulated/index_SK_2025.rds"))
+
+### LK: Create index data ######################################################
+rm(list=setdiff(ls(), c("path_data", "path_work", "normalized_data_GEM", "normalized_data_KRE", "normalized_data_SK", "normalized_data_LK", "weights", "weights_inGEM", "order", "order_GEM", lsf.str())))
 
 n <- length(names(normalized_data_LK))
 
@@ -224,26 +220,66 @@ sink(paste0(path_work, "/Index_output_LK_n20_randomweights.txt"), append=FALSE, 
 index_LK %>% print(n=20)
 sink()
 
+write_rds(index_LK, path=paste0(path_data, "/Manipulated/index_LK_2025.rds"))
+
+### All GEM: Create index data #################################################
+rm(list=setdiff(ls(), c("path_data", "path_work", "normalized_data_GEM", "normalized_data_KRE", "normalized_data_SK", "normalized_data_LK", "weights", "weights_inGEM", "order", "order_GEM", lsf.str())))
+
+n <- length(names(normalized_data_GEM))
+
+names_all <- normalized_data_GEM %>%
+  dplyr::select(Name, ID)
+
+index <- normalized_data_GEM %>%
+  relocate(order_GEM, .after="Name") %>%
+  rowwise() %>%
+  mutate(
+    Index = sum(c_across(4:n) * unlist(weights_inGEM)),
+    .keep = "unused"
+  ) %>%
+  ungroup() %>%
+  dplyr::select(ID, Index) %>%
+  left_join(names_all, by="ID") %>%
+  arrange(desc(Index)) %>%
+  mutate(ID_K = if_else(ID >= 10000000,
+                        substr(format(ID, scientific = FALSE, trim=T), 1, 5),
+                        substr(format(ID, scientific = FALSE, trim=T), 1, 4))) %>%
+  mutate(ID_K = as.numeric(ID_K)) 
+
+index <- index %>%
+  arrange(ID_K, desc(Index)) %>%
+  group_by(ID_K) %>%
+  mutate(rn = row_number()) %>%
+  ungroup()
+
+sink(paste0(path_work, "/Index_output_allcounties_n20_randomweights.txt"), append=FALSE, split=TRUE)
+index %>% print(n=20)
+sink()
+
+write_rds(index, path=paste0(path_data, "/Manipulated/index_allGEM_2025.rds"))
+
+
 ## -----------------------------------------------------------------------------
 ## ggplots
 ## -----------------------------------------------------------------------------
 
-rm(list=setdiff(ls(), c("path_data", "path_work", "weights", lsf.str())))
+rm(list=setdiff(ls(), c("path_data", "path_work", "path_graphs", "weights", "weights_inGEM", lsf.str())))
 
 ### Load data ###
-index <- read_rds(file = paste0(path_data, "/Manipulated/index_all_2020.rds"))
-index_SK <- read_rds(file = paste0(path_data, "/Manipulated/index_SK_2020.rds"))
-index_LK <- read_rds(file = paste0(path_data, "/Manipulated/index_LK_2020.rds"))
+index <- read_rds(file = paste0(path_data, "/Manipulated/index_allKRE_2025.rds"))
+index_SK <- read_rds(file = paste0(path_data, "/Manipulated/index_SK_2025.rds"))
+index_LK <- read_rds(file = paste0(path_data, "/Manipulated/index_LK_2025.rds"))
+index_GEM <- read_rds(file = paste0(path_data, "/Manipulated/index_allGEM_2025.rds"))
 
-### Verteilung ###
+### All KRE ####################################################################
 top20_kreise <- index %>%
   arrange(desc(Index)) %>%
   slice(1:20)
 
-top_synth_kreis <- sum(1* unlist(weights))
+top_synth_kreis <- sum(1* unlist(weights[weights>0])) + sum(-1*unlist(weights[weights<=0]))
 
 # Erstellen des ggplot-Diagramms
-ggplot(top20_kreise, aes(x = reorder(Region, Index), y = Index)) +
+ggplot(top20_kreise, aes(x = reorder(Name, Index), y = Index)) +
   geom_col(fill = "blue") +
   geom_hline(yintercept=top_synth_kreis)+
   coord_flip() +
@@ -255,14 +291,15 @@ ggplot(top20_kreise, aes(x = reorder(Region, Index), y = Index)) +
     axis.text = element_text(color = "black")
   )
 
-ggsave(paste0(path_graphs, "/Top20_Kreise_Lebenswertigkeitsindex.png"), width = 10, height = 6)
+ggsave(paste0(path_graphs, "/Top20_Kreise_Lebenswertigkeitsindex_randomweights.png"), width = 10, height = 6)
 
+### LK #########################################################################
 top20_kreise_LK <- index_LK %>%
   arrange(desc(Index)) %>%
   slice(1:20)
 
 # Erstellen des ggplot-Diagramms
-ggplot(top20_kreise_LK, aes(x = reorder(Region, Index), y = Index)) +
+ggplot(top20_kreise_LK, aes(x = reorder(Name, Index), y = Index)) +
   geom_col(fill = "blue") +
   geom_hline(yintercept=top_synth_kreis)+
   coord_flip() +
@@ -274,14 +311,15 @@ ggplot(top20_kreise_LK, aes(x = reorder(Region, Index), y = Index)) +
     axis.text = element_text(color = "black")
   )
 
-ggsave(paste0(path_graphs, "/Top20_Kreise_Lebenswertigkeitsindex_LK.png"), width = 10, height = 6)
+ggsave(paste0(path_graphs, "/Top20_Kreise_Lebenswertigkeitsindex_LK_randomweights.png"), width = 10, height = 6)
 
+### SK #########################################################################
 top20_kreise_SK <- index_SK %>%
   arrange(desc(Index)) %>%
   slice(1:20)
 
 # Erstellen des ggplot-Diagramms
-ggplot(top20_kreise_SK, aes(x = reorder(Region, Index), y = Index)) +
+ggplot(top20_kreise_SK, aes(x = reorder(Name, Index), y = Index)) +
   geom_col(fill = "blue") +
   geom_hline(yintercept=top_synth_kreis)+
   coord_flip() +
@@ -293,7 +331,29 @@ ggplot(top20_kreise_SK, aes(x = reorder(Region, Index), y = Index)) +
     axis.text = element_text(color = "black")
   )
 
-ggsave(paste0(path_graphs, "/Top20_Kreise_Lebenswertigkeitsindex_SK.png"), width = 10, height = 6)
+ggsave(paste0(path_graphs, "/Top20_Kreise_Lebenswertigkeitsindex_SK_randomweights.png"), width = 10, height = 6)
+
+### All GEM #########################################################################
+top20_GEM <- index_GEM %>%
+  arrange(desc(Index)) %>%
+  slice(1:20)
+
+top_synth_GEM <- sum(1* unlist(weights_inGEM[weights_inGEM>0])) + sum(-1*unlist(weights_inGEM[weights_inGEM<=0]))
+
+# Erstellen des ggplot-Diagramms
+ggplot(top20_GEM, aes(x = reorder(Name, Index), y = Index)) +
+  geom_col(fill = "blue") +
+  geom_hline(yintercept=top_synth_GEM )+
+  coord_flip() +
+  scale_y_continuous(limits = c(0, top_synth_GEM))+
+  labs(title = "Top 20 Gemeinden nach Lebenswertigkeitsindex", x = "Gemeinde", y = "Index der Lebenswertigkeit") +
+  theme_minimal(base_size = 15) +
+  theme(
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(color = "black")
+  )
+
+ggsave(paste0(path_graphs, "/Top20_Kreise_Lebenswertigkeitsindex_allGEM_randomweights.png"), width = 10, height = 6)
 
 
 ## -----------------------------------------------------------------------------

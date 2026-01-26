@@ -1,0 +1,25 @@
+# A tibble: 10,775 × 5
+        ID Index Name                    ID_K    rn
+     <dbl> <dbl> <chr>                  <dbl> <int>
+ 1 1001000 0.218 Flensburg, Stadt        1001     1
+ 2 1002000 0.179 Kiel, Landeshauptstadt  1002     1
+ 3 1003000 0.230 Lübeck, Hansestadt      1003     1
+ 4 1004000 0.185 Neumünster, Stadt       1004     1
+ 5 1051033 1.35  Friedrichsgabekoog      1051     1
+ 6 1051008 0.996 Bergewöhrden            1051     2
+ 7 1051049 0.818 Hennstedt               1051     3
+ 8 1051131 0.812 Westerborstel           1051     4
+ 9 1051088 0.746 Pahlen                  1051     5
+10 1051015 0.729 Bunsoh                  1051     6
+11 1051016 0.702 Burg (Dithmarschen)     1051     7
+12 1051114 0.698 Tellingstedt            1051     8
+13 1051021 0.690 Diekhusen-Fahrstedt     1051     9
+14 1051072 0.646 Marne, Stadt            1051    10
+15 1051034 0.557 Friedrichskoog          1051    11
+16 1051074 0.526 Meldorf, Stadt          1051    12
+17 1051011 0.525 Brunsbüttel, Stadt      1051    13
+18 1051097 0.523 Sankt Michaelisdonn     1051    14
+19 1051065 0.520 Lehe                    1051    15
+20 1051127 0.515 Wesselburen, Stadt      1051    16
+# ℹ 10,755 more rows
+# ℹ Use `print(n = ...)` to see more rows
