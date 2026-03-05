@@ -276,7 +276,7 @@ ui <- fluidPage(
 # # Define server logic required to draw a Bar chart
 server <- function(input, output, session) {
   
-  shinyalert("Welcome", "Welcome to RegioIndex - the dashboard helping you to find your favorite place in Germany!", type = "info", showCancelButton = T, confirmButtonText = "Let's start.", cancelButtonText = "How does it work?", imageUrl = "/Users/apxww/Desktop/GitHub/ranking_german_counties/modal_pic.png")
+  shinyalert("Welcome", "Welcome to RegioIndex - the dashboard helping you to find your favorite place in Germany!", type = "info", showCancelButton = T, confirmButtonText = "Let's start.", cancelButtonText = "How does it work?", imageUrl = "https://raw.githubusercontent.com/GStahn/ranking_german_counties/refs/heads/main/modal_pic.png")
   
   v <- reactiveValues(data = NULL)
   title <- reactiveValues(data = NULL)
