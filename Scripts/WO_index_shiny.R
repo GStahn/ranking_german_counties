@@ -33,6 +33,7 @@ library(dplyr)
 library(readr)
 library(ggplot2)
 library(shinyalert)
+library(shinyhelper)
 
 ### clean start ###
 rm(list = ls())
@@ -50,6 +51,14 @@ path_work <- "/Users/apxww/Desktop/GitHub/ranking_german_counties/Work"
 ui <- fluidPage(
   
   titlePanel("RegioIndex"),
+  
+  hr(),
+  
+  ### Implement buttons for each specification ###
+  actionButton("how", "Wie funktioniert RegioIndex?", 
+               style="color: #fff; background-color: #337ab7; border-color: #2e6da4"),
+  hr(),
+  
   sidebarLayout(
     sidebarPanel(
       width = 4,
@@ -250,20 +259,25 @@ ui <- fluidPage(
       
       # --- CATEGORY: OTHER ---
           sliderInput("Traffic.Accidents", "Traffic Accidents", -10, 0, 0),
-          sliderInput("Emp.Creative", "Creative Industry", -10, 10, 0)
+          sliderInput("Emp.Creative", "Creative Industry", -10, 10, 0), 
+      
+      hr(),
+      actionButton("all", "Alle Kreise"), 
+      bsTooltip(
+        id = "all",
+        title = "Dieser Button berechnet den RegioIndex über alle deutschen Kreise und kreisfreien Städte.",
+        placement = "right",
+        trigger = "hover"
+      ),
+      actionButton("sk", "Nur Stadtkreise"), 
+      actionButton("lk", "Nur Landkreise")
+      
       ),
     
     mainPanel(
       plotOutput("barPlot")
     )
-  ),
-  
-  ### Implement buttons for each specification ###
-  actionButton("all", "Alle Kreise"),
-  actionButton("sk", "Nur Stadtkreise"), 
-  actionButton("lk", "Nur Landkreise"), 
-  hr()
-  
+  )
 )
 
 ## -----------------------------------------------------------------------------
@@ -276,7 +290,60 @@ ui <- fluidPage(
 # # Define server logic required to draw a Bar chart
 server <- function(input, output, session) {
   
-  shinyalert("Welcome", "Welcome to RegioIndex - the dashboard helping you to find your favorite place in Germany!", type = "info", showCancelButton = T, confirmButtonText = "Let's start.", cancelButtonText = "How does it work?", imageUrl = "https://raw.githubusercontent.com/GStahn/ranking_german_counties/refs/heads/main/modal_pic.png")
+  shinyalert("Welcome", "Welcome to RegioIndex - the dashboard helping you to find your favorite place in Germany!", 
+             type = "info", showCancelButton = F, confirmButtonText = "Auf gehts!", 
+             imageUrl = "https://raw.githubusercontent.com/GStahn/ranking_german_counties/refs/heads/main/modal_pic_small.png",
+             imageWidth=375, imageHeight = 250, animation = "slide-from-bottom", closeOnEsc= F)
+  
+  observe_helpers()
+  
+  observeEvent(input$how, {
+    
+    shinyalert(
+      title = "Wie funktioniert der RegioIndex?",
+      text = HTML("
+      <div style='text-align:left; line-height:1.4;'>
+        <p><b>RegioIndex</b> hilft dir dabei, Kreise und kreisfreie Städte in Deutschland danach zu vergleichen,
+        <b>wie gut sie zu deinen persönlichen Präferenzen passen</b>. Du legst fest, welche Faktoren dir wichtig sind –
+        die App berechnet daraus ein auf individuell zugeschnittenes Ranking.</p>
+
+        <hr/>
+
+        <h4 style='margin-bottom:6px;'>1) So nutzt du die App</h4>
+        <ul>
+          <li>Links stellst du mit den <b>Schiebereglern</b> ein, wie wichtig dir einzelne Themen sind (z. B. Umwelt, Infrastruktur, Wirtschaft).</li>
+          <li>Skala: <b>-10</b> (wirkt stark negativ), <b>0</b> (egal), <b>+10</b> (sehr wichtig).</li>
+          <li>Mit <b>Show Details</b> kannst du Unterindikatoren (z. B. NO<sub>2</sub>, PM2.5, ÖPNV, Breitband) separat anpassen.</li>
+          <li>Oben wählst du danach aus, ob du <b>Alle Kreise</b>, nur <b>Stadtkreise</b> oder nur <b>Landkreise</b> vergleichen möchtest.</li>
+        </ul>
+
+        <h4 style='margin-bottom:6px;'>2) Was du als Output bekommst</h4>
+        <ul>
+          <li>Ein Balkendiagramm mit den <b>Top 20 Regionen</b>, die am besten zu deinen Einstellungen passen.</li>
+          <li>Jede Region erhält einen <b>RegioIndex-Wert</b> zwischen <b>0</b> und <b>100</b>.</li>
+          <li><b>100</b> entspricht einem theoretisch „idealen“ Kreis, der deinem gewünschten Profil perfekt entsprechen würde.</li>
+        </ul>
+
+        <h4 style='margin-bottom:6px;'>3) Wie der RegioIndex grob berechnet wird</h4>
+        <ol>
+          <li>Alle Indikatoren werden zuerst <b>normalisiert</b>, damit sie vergleichbar sind.</li>
+          <li>Deine Regler-Werte werden als <b>Gewichte</b> verwendet (von -10 bis +10, intern skaliert).</li>
+          <li>Pro Region wird eine <b>gewichtete Summe</b> berechnet und anschließend auf <b>0–100</b> skaliert.</li>
+        </ol>
+
+        <p style='margin-top:10px;'>
+          <i>Tipp:</i> Wenn du viele Regler auf 0 lässt, beeinflussen diese Faktoren das Ranking nicht.
+          Spiele mit den Gewichten – so siehst du schnell, welche Regionen zu unterschiedlichen Lebensstilen passen.
+        </p>
+      </div>
+    "),
+      type = "info",
+      confirmButtonText = "Alles klar – los geht's.",
+      closeOnEsc = TRUE,
+      html=T
+    )
+    
+  })
   
   v <- reactiveValues(data = NULL)
   title <- reactiveValues(data = NULL)
