@@ -1,0 +1,126 @@
+Air Pollution (Environmental Quality)
+
+-   no2_avg
+-   pm25_avg
+-   pm10_avg
+-   co_avg
+-   so2_avg
+-   pb_avg
+
+Green Areas
+
+-   Recreation.Area.per.Capita
+-   Forest.Area
+-   Water.Area
+
+Mobility Transition
+
+-   Charg.Points.per100EV
+-   Share.Car.Hybrid
+-   Share.Car.Electro
+
+Areal Aspects
+
+-   Settlement.Area.in.Flood.Zone
+-   Sealed.Area.per.Capita
+
+------------------------------------------------------------------------
+
+Population Size
+
+-   Population
+-   Population.Density
+
+Age Structure
+
+-   Age.below.6
+-   Age.6.18
+-   Age.18.65
+-   Age.65
+
+------------------------------------------------------------------------
+
+Housing & Land Market
+
+-   New.Housing.per.Capita
+-   Permit.Housing.perCapita
+-   Land.Price
+-   Rent.NetAvg
+
+------------------------------------------------------------------------
+
+Transport Infrastructure
+
+-   Highway.Access
+-   Airport.Access
+-   Highspeed.Rail.Access
+-   Public.Transport.Access
+
+Digital Infrastructure
+
+-   Broadband.50Mbps
+-   Broadband.100Mbps
+-   Broadband.1000Mbps
+
+Retail & Basic Services
+
+-   Supermarket.Access
+-   Doc.GP
+-   Pharmacy.Access
+
+------------------------------------------------------------------------
+
+Education Infrastructure
+
+-   School.Primary
+-   School.SpecialEdu
+-   Daycare
+-   Apprent.Positions
+-   Apprent
+
+Social Structure
+
+-   Child.Poverty
+-   Share.Women.Council
+-   Pay.Gap.Gender
+-   Migration.Balance
+-   Emp.Rate.Women
+-   Emp.Rate.Foreign
+
+------------------------------------------------------------------------
+
+Employment Rates
+
+-   Emp.Rate
+-   Unemp.Men
+
+Sectoral Employment
+
+-   Emp.Primary
+-   Emp.Secundary
+-   Emp.Tertiary
+
+Qualification Structure
+
+-   Emp.AO.Academic
+-   Emp.AO.Vocational
+-   Emp.AO.NoTrain
+-   Emp.Expert
+-   Emp.Specialist
+-   Emp.Professional
+-   Emp.Helper
+
+------------------------------------------------------------------------
+
+-   GDP.perCapita
+-   Purchasing.Power
+-   Income.Median.Age25to54
+-   Income.Median.Age55to64
+-   Investment.Allocations
+
+------------------------------------------------------------------------
+
+Other:
+
+-   Traffic.Accidents
+-   Emp.Creative (as a proxy for culture)

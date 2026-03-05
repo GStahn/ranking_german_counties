@@ -7,7 +7,7 @@
 ## Author: Gerrit Stahn
 ##
 ## Date Created: 2025-11-20
-## Last Update: 2026-01-26
+## Last Update: 2026-02-23
 ##
 ## Copyright (c) Gerrit Stahn, 2025
 ## Email: gerrit.stahn@wiwi.uni-halle.de
@@ -171,7 +171,7 @@ sink()
 write_rds(index, path=paste0(path_data, "/Manipulated/index_allKRE_2025.rds"))
 
 ### SK: Create index data ######################################################
-rm(list=setdiff(ls(), c("path_data", "path_work", "normalized_data_GEM", "normalized_data_KRE", "normalized_data_SK", "normalized_data_LK", "weights", "weights_inGEM", "order", "order_GEM", lsf.str())))
+rm(list=setdiff(ls(), c("path_data", "path_work", "path_graphs", "normalized_data_GEM", "normalized_data_KRE", "normalized_data_SK", "normalized_data_LK", "weights", "weights_inGEM", "order", "order_GEM", lsf.str())))
 
 n <- length(names(normalized_data_SK))
 
@@ -197,7 +197,7 @@ sink()
 write_rds(index_SK, path=paste0(path_data, "/Manipulated/index_SK_2025.rds"))
 
 ### LK: Create index data ######################################################
-rm(list=setdiff(ls(), c("path_data", "path_work", "normalized_data_GEM", "normalized_data_KRE", "normalized_data_SK", "normalized_data_LK", "weights", "weights_inGEM", "order", "order_GEM", lsf.str())))
+rm(list=setdiff(ls(), c("path_data", "path_work", "path_graphs", "normalized_data_GEM", "normalized_data_KRE", "normalized_data_SK", "normalized_data_LK", "weights", "weights_inGEM", "order", "order_GEM", lsf.str())))
 
 n <- length(names(normalized_data_LK))
 
@@ -223,7 +223,7 @@ sink()
 write_rds(index_LK, path=paste0(path_data, "/Manipulated/index_LK_2025.rds"))
 
 ### All GEM: Create index data #################################################
-rm(list=setdiff(ls(), c("path_data", "path_work", "normalized_data_GEM", "normalized_data_KRE", "normalized_data_SK", "normalized_data_LK", "weights", "weights_inGEM", "order", "order_GEM", lsf.str())))
+rm(list=setdiff(ls(), c("path_data", "path_work", "path_graphs", "normalized_data_GEM", "normalized_data_KRE", "normalized_data_SK", "normalized_data_LK", "weights", "weights_inGEM", "order", "order_GEM", lsf.str())))
 
 n <- length(names(normalized_data_GEM))
 
