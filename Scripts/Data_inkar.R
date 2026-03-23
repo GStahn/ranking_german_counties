@@ -7,7 +7,7 @@
 ## Author: Gerrit Stahn
 ##
 ## Date Created: 2025-10-21
-## Last Update: 2025-11-20
+## Last Update: 2026-03-06
 ##
 ## Copyright (c) Gerrit Stahn, 2025
 ## Email: gerrit.stahn@wiwi.uni-halle.de
@@ -147,38 +147,38 @@ get_metadata("363")
 # Build vectors 
 var_vec <- c(
   "Population", # Bevölkerung gesamt
-#  "Elg.Workers", # Erwerbsfähige Bevölkerung (15 bis unter 65 Jahre) 
-  "New.Housing.per.Capita", # Neubauwohnungen je Einwohner
-  "Permit.Housing.perCapita", # Baugenehmigungen für Wohnungenje Einwohner
-  "Age.below.6", # Einwohner unter 6 Jahren
-  "Age.6.18", # Einwohner von 6 bis unter 18 Jahren
-  "Age.65", # Einwohner 65 Jahre und älter
-  "School.Primary", # Grundschulen
-  "School.SpecialEdu", # Allgemeinbildende Schulen mit Förderschwerpunkt
-  "Migration.Balance", # Gesamtwanderungssaldo
-  "Purchasing.Power", # Kaufkraft
-  "Recreation.Area.per.Capita", # Erholungsfläche je Einwohner
-  "Forest.Area", # Waldfläche
-  "Water.Area", # Wasserfläche
-  'Population.Density', # Einwohnerdichte
-  'Highway.Access', # Erreichbarkeit von Autobahnen
-  'Airport.Access', # Erreichbarkeit von Flughäfen
-  'Highspeed.Rail.Access', # Erreichbarkeit von IC/EC/ICE-Bahnhöfen
-  'Supermarket.Access', # Entfernung zum Supermarkt/Discounter
-  'Doc.GP', # Entfernung zum Hausarzt
-  "Pharmacy.Access", # Entfernung nächste Apotheke
-  'Broadband.50Mbps', # Bandbreitenverfügbarkeit mindestens 50 Mbit/s
-  'Broadband.100Mbps', # Bandbreitenverfügbarkeit mindestens 100 Mbit/s
-  'Broadband.1000Mbps', # Bandbreitenverfügbarkeit mindestens 1000 Mbit/s
-#  "New.Family.Houses", # Neue Ein- und Zweifamilienhäuser
-  'Public.Transport.Access', # Entfernung zur ÖV Haltestelle
-  'Traffic.Accidents', # Verunglückte im Straßenverkehr
-  'Child.Poverty', # Kinderarmut
+#  "Elg_Workers", # Erwerbsfähige Bevölkerung (15 bis unter 65 Jahre) 
+  "New_Housing_per_Capita", # Neubauwohnungen je Einwohner
+  "Permit_Housing_perCapita", # Baugenehmigungen für Wohnungenje Einwohner
+  "Age_below_6", # Einwohner unter 6 Jahren
+  "Age_6_18", # Einwohner von 6 bis unter 18 Jahren
+  "Age_65", # Einwohner 65 Jahre und älter
+  "School_Primary", # Grundschulen
+  "School_SpecialEdu", # Allgemeinbildende Schulen mit Förderschwerpunkt
+  "Migration_Balance", # Gesamtwanderungssaldo
+  "Purchasing_Power", # Kaufkraft
+  "Recreation_Area_per_Capita", # Erholungsfläche je Einwohner
+  "Forest_Area", # Waldfläche
+  "Water_Area", # Wasserfläche
+  'Population_Density', # Einwohnerdichte
+  'Highway_Access', # Erreichbarkeit von Autobahnen
+  'Airport_Access', # Erreichbarkeit von Flughäfen
+  'Highspeed_Rail_Access', # Erreichbarkeit von IC/EC/ICE-Bahnhöfen
+  'Supermarket_Access', # Entfernung zum Supermarkt/Discounter
+  'Doc_GP', # Entfernung zum Hausarzt
+  "Pharmacy_Access", # Entfernung nächste Apotheke
+  'Broadband_50Mbps', # Bandbreitenverfügbarkeit mindestens 50 Mbit/s
+  'Broadband_100Mbps', # Bandbreitenverfügbarkeit mindestens 100 Mbit/s
+  'Broadband_1000Mbps', # Bandbreitenverfügbarkeit mindestens 1000 Mbit/s
+#  "New_Family_Houses", # Neue Ein- und Zweifamilienhäuser
+  'Public_Transport_Access', # Entfernung zur ÖV Haltestelle
+  'Traffic_Accidents', # Verunglückte im Straßenverkehr
+  'Child_Poverty', # Kinderarmut
   'Daycare', # Anzahl Kindertagesstätten
-# 'Students.18.to.25', # Studierende je 100 Einwohner 18 bis 25 Jahre
-  "Emp.Rate", # Beschäftigtenquote
-  "Emp.Rate.Women", # Beschäftigtenquote Frauen
-  "Unemp.Men" # Anteil Arbeitslose Männer zu Gesamtarbeitslose
+# 'Students_18_to_25', # Studierende je 100 Einwohner 18 bis 25 Jahre
+  "Emp_Rate", # Beschäftigtenquote
+  "Emp_Rate_Women", # Beschäftigtenquote Frauen
+  "Unemp_Men" # Anteil Arbeitslose Männer zu Gesamtarbeitslose
 )
 
 num_vec <- c(
@@ -231,65 +231,65 @@ get_metadata("496")
 var_vec <- c(
   ### Same variables as for GEM ################################################
   "Population", # Bevölkerung gesamt
-  #  "Elg.Workers", # Erwerbsfähige Bevölkerung (15 bis unter 65 Jahre) 
-  "New.Housing.per.Capita", # Neubauwohnungen je Einwohner
-  "Permit.Housing.perCapita", # Baugenehmigungen für Wohnungenje Einwohner
-  "Age.below.6", # Einwohner unter 6 Jahren
-  "Age.6.18", # Einwohner von 6 bis unter 18 Jahren
-  "Age.65", # Einwohner 65 Jahre und älter
-  "School.Primary", # Grundschulen
-  "School.SpecialEdu", # Allgemeinbildende Schulen mit Förderschwerpunkt
-  "Migration.Balance", # Gesamtwanderungssaldo
-  "Purchasing.Power", # Kaufkraft
-  "Recreation.Area.per.Capita", # Erholungsfläche je Einwohner
-  "Forest.Area", # Waldfläche
-  "Water.Area", # Wasserfläche
-  'Population.Density', # Einwohnerdichte
-  'Highway.Access', # Erreichbarkeit von Autobahnen
-  'Airport.Access', # Erreichbarkeit von Flughäfen
-  'Highspeed.Rail.Access', # Erreichbarkeit von IC/EC/ICE-Bahnhöfen
-  'Supermarket.Access', # Entfernung zum Supermarkt/Discounter
-  'Doc.GP', # Entfernung zum Hausarzt
-  "Pharmacy.Access", # Entfernung nächste Apotheke
-  'Broadband.50Mbps', # Bandbreitenverfügbarkeit mindestens 50 Mbit/s
-  'Broadband.100Mbps', # Bandbreitenverfügbarkeit mindestens 100 Mbit/s
-  'Broadband.1000Mbps', # Bandbreitenverfügbarkeit mindestens 1000 Mbit/s
-#  "New.Family.Houses", # Neue Ein- und Zweifamilienhäuser
-  'Public.Transport.Access', # Entfernung zur ÖV Haltestelle
-  'Traffic.Accidents', # Verunglückte im Straßenverkehr
-  'Child.Poverty', # Kinderarmut
+  #  "Elg_Workers", # Erwerbsfähige Bevölkerung (15 bis unter 65 Jahre) 
+  "New_Housing_per_Capita", # Neubauwohnungen je Einwohner
+  "Permit_Housing_perCapita", # Baugenehmigungen für Wohnungenje Einwohner
+  "Age_below_6", # Einwohner unter 6 Jahren
+  "Age_6_18", # Einwohner von 6 bis unter 18 Jahren
+  "Age_65", # Einwohner 65 Jahre und älter
+  "School_Primary", # Grundschulen
+  "School_SpecialEdu", # Allgemeinbildende Schulen mit Förderschwerpunkt
+  "Migration_Balance", # Gesamtwanderungssaldo
+  "Purchasing_Power", # Kaufkraft
+  "Recreation_Area_per_Capita", # Erholungsfläche je Einwohner
+  "Forest_Area", # Waldfläche
+  "Water_Area", # Wasserfläche
+  'Population_Density', # Einwohnerdichte
+  'Highway_Access', # Erreichbarkeit von Autobahnen
+  'Airport_Access', # Erreichbarkeit von Flughäfen
+  'Highspeed_Rail_Access', # Erreichbarkeit von IC/EC/ICE-Bahnhöfen
+  'Supermarket_Access', # Entfernung zum Supermarkt/Discounter
+  'Doc_GP', # Entfernung zum Hausarzt
+  "Pharmacy_Access", # Entfernung nächste Apotheke
+  'Broadband_50Mbps', # Bandbreitenverfügbarkeit mindestens 50 Mbit/s
+  'Broadband_100Mbps', # Bandbreitenverfügbarkeit mindestens 100 Mbit/s
+  'Broadband_1000Mbps', # Bandbreitenverfügbarkeit mindestens 1000 Mbit/s
+#  "New_Family_Houses", # Neue Ein- und Zweifamilienhäuser
+  'Public_Transport_Access', # Entfernung zur ÖV Haltestelle
+  'Traffic_Accidents', # Verunglückte im Straßenverkehr
+  'Child_Poverty', # Kinderarmut
   'Daycare', # Anzahl Kindertagesstätten
-  # 'Students.18.to.25', # Studierende je 100 Einwohner 18 bis 25 Jahre
+  # 'Students_18_to_25', # Studierende je 100 Einwohner 18 bis 25 Jahre
   #  'Doctors', # Hausärzte
-  "Emp.Rate", # Beschäftigtenquote
-  "Emp.Rate.Women", # Beschäftigtenquote Frauen
-  "Unemp.Men", # Anteil Arbeitslose Männer zu Gesamtarbeitslose
+  "Emp_Rate", # Beschäftigtenquote
+  "Emp_Rate_Women", # Beschäftigtenquote Frauen
+  "Unemp_Men", # Anteil Arbeitslose Männer zu Gesamtarbeitslose
   ### Only District-level ######################################################
-  "Investment.Allocations", # Zuweisungen für Investitionsfördermaßnahmen
-  "Land.Price", # Baulandpreise
-  "Emp.Primary", # Beschäftigte Pimärer Sektor
-  "Emp.Secundary", # Beschäftigte Sekundärer Sektor
-  "Emp.Tertiary", # Beschäftigte Tertiärer Sektor
-  "Emp.Creative", # Beschäftigte in Kreativbranchen
-  "Emp.AO.Academic", # Beschäftigte am AO mit akademischem Berufsabschluss
-  "Emp.AO.Vocational", # Beschäftigte am AO mit Berufsabschluss
-  "Emp.AO.NoTrain", # Beschäftigte am AO ohne Berufsabschluss
-  "Emp.Expert", # Beschäftigte mit Anforderungsniveau Experte
-  "Emp.Specialist", # Beschäftigte mit Anforderungsniveau Spezialist
-  "Emp.Professional", # Beschäftigte mit Anforderungsniveau Fachkraft
-  "Emp.Helper", # Beschäftigte mit Anforderungsniveau Helfer 
-  "Charg.Points.per100EV", # Ladepunkte je 100 Elektrofahrzeuge
-  "Share.Car.Hybrid", # Pkw Hybrid insgesamt
-  "Share.Car.Electro", # Pkw Elektro
-  "Apprent.Positions", # Ausbildungsplätze
+  "Investment_Allocations", # Zuweisungen für Investitionsfördermaßnahmen
+  "Land_Price", # Baulandpreise
+  "Emp_Primary", # Beschäftigte Pimärer Sektor
+  "Emp_Secundary", # Beschäftigte Sekundärer Sektor
+  "Emp_Tertiary", # Beschäftigte Tertiärer Sektor
+  "Emp_Creative", # Beschäftigte in Kreativbranchen
+  "Emp_AO_Academic", # Beschäftigte am AO mit akademischem Berufsabschluss
+  "Emp_AO_Vocational", # Beschäftigte am AO mit Berufsabschluss
+  "Emp_AO_NoTrain", # Beschäftigte am AO ohne Berufsabschluss
+  "Emp_Expert", # Beschäftigte mit Anforderungsniveau Experte
+  "Emp_Specialist", # Beschäftigte mit Anforderungsniveau Spezialist
+  "Emp_Professional", # Beschäftigte mit Anforderungsniveau Fachkraft
+  "Emp_Helper", # Beschäftigte mit Anforderungsniveau Helfer 
+  "Charg_Points_per100EV", # Ladepunkte je 100 Elektrofahrzeuge
+  "Share_Car_Hybrid", # Pkw Hybrid insgesamt
+  "Share_Car_Electro", # Pkw Elektro
+  "Apprent_Positions", # Ausbildungsplätze
   "Apprent", # Auszubildende
-  "Share.Women.Council", # Frauenanteil im Stadtrat bzw. Kreistag
-  "Emp.Rate.Foreign", # Beschäftigtenquote Ausländer
-  "Income.Median.Age25to54", # Medianeinkommen 25 bis unter 55-Jährige
-  "Income.Median.Age55to64", # Medianeinkommen 55 bis unter 65-Jährige
-  "Pay.Gap.Gender", # Verdienstabstand zwischen Frauen und Männern
-  "GDP.perCapita", # Bruttoinlandsprodukt je Einwohner
-  "Land.Price" # Baulandpreise
+  "Share_Women_Council", # Frauenanteil im Stadtrat bzw. Kreistag
+  "Emp_Rate_Foreign", # Beschäftigtenquote Ausländer
+  "Income_Median_Age25to54", # Medianeinkommen 25 bis unter 55-Jährige
+  "Income_Median_Age55to64", # Medianeinkommen 55 bis unter 65-Jährige
+  "Pay_Gap_Gender", # Verdienstabstand zwischen Frauen und Männern
+  "GDP_perCapita", # Bruttoinlandsprodukt je Einwohner
+  "Land_Price" # Baulandpreise
 )
 
 num_vec <- c(
@@ -362,13 +362,13 @@ kre_list <- inkar_multi(var_vec, num_vec, geo="KRE")
 
 # Build vectors
 var_vec <- c(
-  "Vote.Share.UNION", # Stimmenanteile CDU/CSU
-  "Vote.Share.SPD", # Stimmenanteile SPD
-  "Vote.Share.Gruene", # Stimmenanteile Grüne
-  "Vote.Share.FDP", # Stimmenanteile FDP
-  "Vote.Share.Other", # Stimmenanteile Sonstige Parteien
-  "Vote.Share.LINKE", # Stimmenanteile Die Linke
-  "Vote.Share.AFD" # Stimmenanteile AfD
+  "Vote_Share_UNION", # Stimmenanteile CDU/CSU
+  "Vote_Share_SPD", # Stimmenanteile SPD
+  "Vote_Share_Gruene", # Stimmenanteile Grüne
+  "Vote_Share_FDP", # Stimmenanteile FDP
+  "Vote_Share_Other", # Stimmenanteile Sonstige Parteien
+  "Vote_Share_LINKE", # Stimmenanteile Die Linke
+  "Vote_Share_AFD" # Stimmenanteile AfD
 )
 
 num_vec <- c(
@@ -407,7 +407,7 @@ kre_add <- read_xlsx(path=paste0(path_data, "/INKAR/BBSR_Raumgliederungen_Refere
 # and adjusted the worksheet "Anschriften_31_01_2023"
 # Data includes areas which are not counties -> Housing data includes all counties
 
-housing_id <- gem_list$data$New.Housing.per.Capita %>%
+housing_id <- gem_list$data$New_Housing_per_Capita %>%
   select(ID) %>% mutate(ID = as.numeric(ID)) %>% pull()
 
 county_data <- read_excel(path = paste0(path_data, "/Destatis/31122023_Auszug_GV.xlsx"), 
@@ -434,8 +434,9 @@ gem_add <- read_xlsx(path=paste0(path_data, "/INKAR/BBSR_Raumgliederungen_Refere
 ### GEM ###
 gem_Rents <- read_xlsx(path = paste0(path_data, "/Destatis/4000W-0004_de.xlsx"),
                        sheet = "4000W-0004_adjusted") %>%
-  mutate(Rent.NetAvg = replace(Rent.NetAvg, Rent.NetAvg=="-", NA)) %>%
-  mutate(Rent.NetAvg = replace(Rent.NetAvg, Rent.NetAvg==".", NA)) %>%
+  rename(Rent_NetAvg=Rent.NetAvg) %>%
+  mutate(Rent_NetAvg = replace(Rent_NetAvg, Rent_NetAvg=="-", NA)) %>%
+  mutate(Rent_NetAvg = replace(Rent_NetAvg, Rent_NetAvg==".", NA)) %>%
   mutate(ID = as.numeric(gsub("^(.{5}).{4}(.*)$", "\\1\\2", ID))) %>%
   filter(ID %in% housing_id) %>%
   select(!(Name))
@@ -450,7 +451,7 @@ gem_list$meta <- rbind(
     Quelle = NA,
     Anmerkungen = NA,
     ID = NA,
-    var = "Rent.NetAvg",
+    var = "Rent_NetAvg",
     source = "Zensus 2022",
     stringsAsFactors = FALSE
   )
@@ -459,6 +460,7 @@ gem_list$meta <- rbind(
 ### KRE ####
 kre_Rents <- read_xlsx(path = paste0(path_data, "/Destatis/4000W-0004_de_kre.xlsx"),
                        sheet = "4000W-0004_adjusted") %>%
+  rename(Rent_NetAvg = Rent.NetAvg) %>%
   mutate(ID = as.numeric(ID)) %>%
   select(!(Name))
 
@@ -472,7 +474,7 @@ kre_list$meta <- rbind(
     Quelle = NA,
     Anmerkungen = NA,
     ID = NA,
-    var = "Rent.NetAvg",
+    var = "Rent_NetAvg",
     source = "Zensus 2022",
     stringsAsFactors = FALSE
   )
@@ -533,10 +535,10 @@ summary(merged_kre)
 
 ### Create Share of people equal to 18 and below 65 ###
 merged_kre <- merged_kre %>%
-  mutate(Age.18.65 = 100 - Age.below.6 - Age.6.18 - Age.65)
+  mutate(Age_18_65 = 100 - Age_below_6 - Age_6_18 - Age_65)
 
 merged_gem <- merged_gem %>%
-  mutate(Age.18.65 = 100 - Age.below.6 - Age.6.18 - Age.65)
+  mutate(Age_18_65 = 100 - Age_below_6 - Age_6_18 - Age_65)
 
 ### Impute GEM NAs with KRE data ###
 
@@ -570,8 +572,8 @@ n_occur <- data.frame(table(merged_gem$Name))
 
 n_occur[n_occur$Freq > 1,]
 
-test <- merged_gem[merged_gem$Name %in% n_occur$Var1[n_occur$Freq > 1],] %>%
-  arrange(Name)
+# test <- merged_gem[merged_gem$Name %in% n_occur$Var1[n_occur$Freq > 1],] %>%
+#  arrange(Name)
 
 summary(merged_gem)
 

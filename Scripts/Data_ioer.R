@@ -7,7 +7,7 @@
 ## Author: Gerrit Stahn
 ##
 ## Date Created: 2025-11-11
-## Last Update: 2025-11-11
+## Last Update: 2026-03-06
 ##
 ## Copyright (c) Gerrit Stahn, 2025
 ## Email: gerrit.stahn@wiwi.uni-halle.de
@@ -62,26 +62,26 @@ gem_liste <- read_rds(file=paste0(path_data, "/gem_liste.rds"))
 R05RT <- read_csv2(paste0(path_data, "/IOER_Monitor/R05RT__2024_gem.csv"), skip=6,
                    trim_ws = T, locale = locale("de", decimal_mark = ","),
                    col_names = c("Lfd", "ID", "Name", 
-                                              "Settlement.Area.in.Flood.Zone")) %>%
+                                              "Settlement_Area_in_Flood_Zone")) %>%
   filter(!(Name=="Deutschland")) %>%
   mutate(ID=as.numeric(ID)) %>%
   filter(ID %in% counties) %>%
-  mutate(Settlement.Area.in.Flood.Zone = gsub(pattern=",", replacement='.', x=Settlement.Area.in.Flood.Zone)) %>%
-  mutate(Settlement.Area.in.Flood.Zone = replace(Settlement.Area.in.Flood.Zone, Settlement.Area.in.Flood.Zone== "keine", NA)) %>%
-  mutate(Settlement.Area.in.Flood.Zone = as.numeric(Settlement.Area.in.Flood.Zone)) %>%
-  dplyr::select(ID, Settlement.Area.in.Flood.Zone)
+  mutate(Settlement_Area_in_Flood_Zone = gsub(pattern=",", replacement='.', x=Settlement_Area_in_Flood_Zone)) %>%
+  mutate(Settlement_Area_in_Flood_Zone = replace(Settlement_Area_in_Flood_Zone, Settlement_Area_in_Flood_Zone== "keine", NA)) %>%
+  mutate(Settlement_Area_in_Flood_Zone = as.numeric(Settlement_Area_in_Flood_Zone)) %>%
+  dplyr::select(ID, Settlement_Area_in_Flood_Zone)
 
 
 # Sealed Area per Capita
 B22MT <- read_csv2(paste0(path_data, "/IOER_Monitor/B22MT__2018_gem.csv"), skip=6,
                    trim_ws = T, col_names = c("Lfd", "ID", "Name", 
-                                              "Sealed.Area.per.Capita")) %>%
+                                              "Sealed_Area_per_Capita")) %>%
   filter(!(Name=="Deutschland")) %>%
   mutate(ID=as.numeric(ID)) %>%
   filter(ID %in% counties) %>%
-  mutate(Sealed.Area.per.Capita = replace(Sealed.Area.per.Capita, Sealed.Area.per.Capita== "keine Daten, nicht berechenbar", NA)) %>%
-  mutate(Sealed.Area.per.Capita = as.numeric(Sealed.Area.per.Capita)) %>%
-  dplyr::select(ID, Sealed.Area.per.Capita) 
+  mutate(Sealed_Area_per_Capita = replace(Sealed_Area_per_Capita, Sealed_Area_per_Capita== "keine Daten, nicht berechenbar", NA)) %>%
+  mutate(Sealed_Area_per_Capita = as.numeric(Sealed_Area_per_Capita)) %>%
+  dplyr::select(ID, Sealed_Area_per_Capita) 
 
 ground_gem <- gem_liste %>%
   left_join(R05RT, by="ID") %>%
@@ -100,7 +100,7 @@ summary(ground_gem)
 R05RT_kre <- read_csv2(paste0(path_data, "/IOER_Monitor/R05RT__2024_kre.csv"), skip=6,
                    trim_ws = T, locale = locale("de", decimal_mark = ","),
                    col_names = c("Lfd", "ID_K", "Name", 
-                                 "Settlement.Area.in.Flood.Zone")) %>%
+                                 "Settlement_Area_in_Flood_Zone")) %>%
   filter(!(Name=="Deutschland")) %>%
   mutate(ID_K=as.numeric(ID_K)) 
 
@@ -108,10 +108,10 @@ R05RT_kre <- read_csv2(paste0(path_data, "/IOER_Monitor/R05RT__2024_kre.csv"), s
 # Sealed Area per Capita
 B22MT_kre <- read_csv2(paste0(path_data, "/IOER_Monitor/B22MT__2018_kre.csv"), skip=6,
                    trim_ws = T, col_names = c("Lfd", "ID_K", "Name", 
-                                              "Sealed.Area.per.Capita")) %>%
+                                              "Sealed_Area_per_Capita")) %>%
   filter(!(Name=="Deutschland")) %>%
   mutate(ID_K=as.numeric(ID_K)) %>%
-  dplyr::select(ID_K, Sealed.Area.per.Capita) 
+  dplyr::select(ID_K, Sealed_Area_per_Capita) 
 
 ground_kre <- R05RT_kre %>%
   left_join(B22MT_kre, by="ID_K")

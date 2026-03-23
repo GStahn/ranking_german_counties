@@ -1,0 +1,2 @@
+load("/Users/apxww/Desktop/GitHub/ranking_german_counties/Data/gem_liste.rds")
+load("/Users/apxww/Desktop/GitHub/ranking_german_counties/Data/counties_2023.rds")
