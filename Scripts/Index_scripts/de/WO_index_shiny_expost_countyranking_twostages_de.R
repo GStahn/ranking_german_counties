@@ -1,16 +1,16 @@
 ## ---------------------------
 ##
-## Script name: WO_index_shiny_expost_countyranking_twostages
+## Skriptname: WO_index_shiny_expost_countyranking_twostages_de
 ##
-## Purpose of script: Creates a Shiny application for ranking German districts
-##                    based on the user's preferences. In a first step, the app
-##                    ranks districts, and in a second step presents the best
-##                    municipalities within the best-ranked districts.
+## Zweck des Skripts: Erstellt eine Shiny-Anwendung zur Bewertung deutscher Kreise
+##                    basierend auf den Präferenzen des Nutzers. In einem ersten Schritt
+##                    bewertet die App die Kreise, und in einem zweiten Schritt werden die
+##                    besten Gemeinden innerhalb der bestbewerteten Kreise angezeigt.
 ##
-## Author: Gerrit Stahn
+## Autor: Gerrit Stahn
 ##
-## Date Created: 2026-03-23
-## Last Update: 2026-03-23
+## Erstellt am: 2026-03-24
+## Letzte Aktualisierung: 2026-03-24
 ##
 ## ---------------------------
 
@@ -33,23 +33,23 @@ setwd("/Users/apxww/Desktop/GitHub/ranking_german_counties")
 path_data <- "/Users/apxww/Desktop/GitHub/ranking_german_counties/Data"
 
 ## -----------------------------------------------------------------------------
-## Reusable UI blocks
+## Wiederverwendbare UI-Bausteine
 ## -----------------------------------------------------------------------------
 
 district_buttons_ui <- function(center = FALSE) {
   div(
     class = if (center) "stage1-buttons" else NULL,
     style = if (!center) "display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;" else NULL,
-    actionButton("all", "All Districts"),
-    actionButton("sk", "Urban Districts Only"),
-    actionButton("lk", "Rural Districts Only")
+    actionButton("all", "Alle Kreise"),
+    actionButton("sk", "Nur Stadtkreise"),
+    actionButton("lk", "Nur Landkreise")
   )
 }
 
 controls_ui <- tagList(
   
-  sliderInput("air", "Air Pollution", -10, 0, 0),
-  checkboxInput("show_air", "Show Air Pollution Details", FALSE),
+  sliderInput("air", "Luftverschmutzung (Kategorie)", -10, 0, 0),
+  checkboxInput("show_air", "Details zur Luftverschmutzung anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_air == true",
     wellPanel(
@@ -58,484 +58,484 @@ controls_ui <- tagList(
       sliderInput("pm10_avg", "PM10", -10, 0, 0),
       sliderInput("co_avg", "CO", -10, 0, 0),
       sliderInput("so2_avg", "SO2", -10, 0, 0),
-      sliderInput("pb_avg", "Lead (Pb)", -10, 0, 0)
+      sliderInput("pb_avg", "Blei (Pb)", -10, 0, 0)
     )
   ),
   hr(),
   
-  sliderInput("green", "Green Areas (Category)", -10, 10, 0),
-  checkboxInput("show_green", "Show Green Area Details", FALSE),
+  sliderInput("green", "Grünflächen (Kategorie)", -10, 10, 0),
+  checkboxInput("show_green", "Details zu Grünflächen anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_green == true",
     wellPanel(
-      sliderInput("Recreation_Area_per_Capita", "Recreation Area per Capita", -10, 10, 0),
-      sliderInput("Forest_Area", "Forest Area", -10, 10, 0),
-      sliderInput("Water_Area", "Water Area", -10, 10, 0)
+      sliderInput("Recreation_Area_per_Capita", "Erholungsfläche pro Kopf", -10, 10, 0),
+      sliderInput("Forest_Area", "Waldfläche", -10, 10, 0),
+      sliderInput("Water_Area", "Wasserfläche", -10, 10, 0)
     )
   ),
   hr(),
   
-  sliderInput("mob_trans", "Mobility Transition (Category)", -10, 10, 0),
-  checkboxInput("show_mob_trans", "Show Mobility Details", FALSE),
+  sliderInput("mob_trans", "Mobilitätswende (Kategorie)", -10, 10, 0),
+  checkboxInput("show_mob_trans", "Details zur Mobilität anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_mob_trans == true",
     wellPanel(
-      sliderInput("Charg_Points_per100EV", "Charging Points per 100 EV", -10, 10, 0),
-      sliderInput("Share_Car_Hybrid", "Share of Hybrid Cars", -10, 10, 0),
-      sliderInput("Share_Car_Electro", "Share of Electric Cars", -10, 10, 0)
+      sliderInput("Charg_Points_per100EV", "Ladepunkte je 100 E-Fahrzeuge", -10, 10, 0),
+      sliderInput("Share_Car_Hybrid", "Anteil Hybridfahrzeuge", -10, 10, 0),
+      sliderInput("Share_Car_Electro", "Anteil Elektrofahrzeuge", -10, 10, 0)
     )
   ),
   hr(),
   
-  sliderInput("areal", "Spatial Aspects (Category)", -10, 10, 0),
-  checkboxInput("show_areal", "Show Spatial Details", FALSE),
+  sliderInput("areal", "Räumliche Aspekte (Kategorie)", -10, 10, 0),
+  checkboxInput("show_areal", "Details zu räumlichen Aspekten anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_areal == true",
     wellPanel(
-      sliderInput("Settlement_Area_in_Flood_Zone", "Settlement Area in Flood Zone", -10, 10, 0),
-      sliderInput("Sealed_Area_per_Capita", "Sealed Area per Capita", -10, 10, 0)
+      sliderInput("Settlement_Area_in_Flood_Zone", "Siedlungsfläche in Überschwemmungsgebiet", -10, 10, 0),
+      sliderInput("Sealed_Area_per_Capita", "Versiegelte Fläche pro Kopf", -10, 10, 0)
     )
   ),
   hr(),
   
-  sliderInput("pop", "Population (Category)", -10, 10, 0),
-  checkboxInput("show_pop", "Show Population Details", FALSE),
+  sliderInput("pop", "Bevölkerung (Kategorie)", -10, 10, 0),
+  checkboxInput("show_pop", "Details zur Bevölkerung anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_pop == true",
     wellPanel(
-      sliderInput("Population", "Total Population", -10, 10, 0),
-      sliderInput("Population_Density", "Population Density", -10, 10, 0)
+      sliderInput("Population", "Gesamtbevölkerung", -10, 10, 0),
+      sliderInput("Population_Density", "Bevölkerungsdichte", -10, 10, 0)
     )
   ),
   hr(),
   
-  sliderInput("Age_below_6", "Age < 6", -10, 10, 0),
-  sliderInput("Age_6_18", "Age 6–18", -10, 10, 0),
-  sliderInput("Age_18_65", "Age 18–65", -10, 10, 0),
-  sliderInput("Age_65", "Age > 65", -10, 10, 0),
+  sliderInput("Age_below_6", "Alter < 6", -10, 10, 0),
+  sliderInput("Age_6_18", "Alter 6–18", -10, 10, 0),
+  sliderInput("Age_18_65", "Alter 18–65", -10, 10, 0),
+  sliderInput("Age_65", "Alter > 65", -10, 10, 0),
   hr(),
   
-  sliderInput("New_Housing_per_Capita", "New Housing per Capita", -10, 10, 0),
-  sliderInput("Permit_Housing_perCapita", "Housing Permits", -10, 10, 0),
-  sliderInput("Land_Price", "Land Price", -10, 10, 0),
-  sliderInput("Rent_NetAvg", "Average Net Rent", -10, 10, 0),
+  sliderInput("New_Housing_per_Capita", "Neue Wohnungen pro Kopf", -10, 10, 0),
+  sliderInput("Permit_Housing_perCapita", "Baugenehmigungen", -10, 10, 0),
+  sliderInput("Land_Price", "Bodenpreis", -10, 10, 0),
+  sliderInput("Rent_NetAvg", "Durchschnittliche Nettokaltmiete", -10, 10, 0),
   hr(),
   
-  sliderInput("infra", "Transport Infrastructure (Category)", 0, 10, 0),
-  checkboxInput("show_infra", "Show Transport Details", FALSE),
+  sliderInput("infra", "Verkehrsinfrastruktur (Kategorie)", -10, 10, 0),
+  checkboxInput("show_infra", "Details zur Verkehrsinfrastruktur anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_infra == true",
     wellPanel(
-      sliderInput("Highway_Access", "Highway Access", -10, 10, 0),
-      sliderInput("Airport_Access", "Airport Access", -10, 10, 0),
-      sliderInput("Highspeed_Rail_Access", "High-Speed Rail Access", -10, 10, 0),
-      sliderInput("Public_Transport_Access", "Public Transport Access", -10, 10, 0)
+      sliderInput("Highway_Access", "Autobahnanschluss", -10, 10, 0),
+      sliderInput("Airport_Access", "Flughafenanbindung", -10, 10, 0),
+      sliderInput("Highspeed_Rail_Access", "Fernbahn-/Hochgeschwindigkeitszuganbindung", -10, 10, 0),
+      sliderInput("Public_Transport_Access", "ÖPNV-Anbindung", -10, 10, 0)
     )
   ),
   hr(),
   
-  sliderInput("digital", "Digital Infrastructure (Category)", 0, 10, 0),
-  checkboxInput("show_digital", "Show Digital Details", FALSE),
+  sliderInput("digital", "Digitale Infrastruktur (Kategorie)", 0, 10, 0),
+  checkboxInput("show_digital", "Details zur digitalen Infrastruktur anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_digital == true",
     wellPanel(
-      sliderInput("Broadband_50Mbps", "Broadband 50 Mbps", 0, 10, 0),
-      sliderInput("Broadband_100Mbps", "Broadband 100 Mbps", 0, 10, 0),
-      sliderInput("Broadband_1000Mbps", "Broadband 1000 Mbps", 0, 10, 0)
+      sliderInput("Broadband_50Mbps", "Breitband 50 Mbps", 0, 10, 0),
+      sliderInput("Broadband_100Mbps", "Breitband 100 Mbps", 0, 10, 0),
+      sliderInput("Broadband_1000Mbps", "Breitband 1000 Mbps", 0, 10, 0)
     )
   ),
   hr(),
   
-  sliderInput("retail", "Retail & Services (Category)", -10, 10, 0),
-  checkboxInput("show_retail", "Show Service Details", FALSE),
+  sliderInput("retail", "Handel & Dienstleistungen (Kategorie)", -10, 10, 0),
+  checkboxInput("show_retail", "Details zu Dienstleistungen anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_retail == true",
     wellPanel(
-      sliderInput("Supermarket_Access", "Supermarket Access", -10, 10, 0),
-      sliderInput("Doc_GP", "General Practitioners", -10, 10, 0),
-      sliderInput("Pharmacy_Access", "Pharmacy Access", -10, 10, 0)
+      sliderInput("Supermarket_Access", "Supermarktanbindung", -10, 10, 0),
+      sliderInput("Doc_GP", "Hausärzte", -10, 10, 0),
+      sliderInput("Pharmacy_Access", "Apothekenanbindung", -10, 10, 0)
     )
   ),
   hr(),
   
-  sliderInput("edu", "Education (Category)", -10, 10, 0),
-  checkboxInput("show_edu", "Show Education Details", FALSE),
+  sliderInput("edu", "Bildung (Kategorie)", -10, 10, 0),
+  checkboxInput("show_edu", "Details zur Bildung anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_edu == true",
     wellPanel(
-      sliderInput("School_Primary", "Primary Schools", -10, 10, 0),
-      sliderInput("School_SpecialEdu", "Special Education Schools", -10, 10, 0),
-      sliderInput("Daycare", "Daycare Coverage", -10, 10, 0),
-      sliderInput("Apprent_Positions", "Apprenticeship Positions", -10, 10, 0)
+      sliderInput("School_Primary", "Grundschulen", -10, 10, 0),
+      sliderInput("School_SpecialEdu", "Förderschulen", -10, 10, 0),
+      sliderInput("Daycare", "Kitaversorgung", -10, 10, 0),
+      sliderInput("Apprent_Positions", "Ausbildungsplätze", -10, 10, 0)
     )
   ),
   hr(),
   
-  sliderInput("social", "Social Structure (Category)", -10, 10, 0),
-  checkboxInput("show_social", "Show Social Details", FALSE),
+  sliderInput("social", "Sozialstruktur (Kategorie)", -10, 10, 0),
+  checkboxInput("show_social", "Details zur Sozialstruktur anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_social == true",
     wellPanel(
-      sliderInput("Share_Women_Council", "Women in Local Councils", -10, 10, 0),
-      sliderInput("Migration_Balance", "Net Migration", -10, 10, 0),
-      sliderInput("Emp_Rate_Women", "Female Employment Rate", -10, 10, 0),
-      sliderInput("Emp_Rate_Foreign", "Foreign Employment Rate", -10, 10, 0)
+      sliderInput("Share_Women_Council", "Frauen in Gemeinderäten", -10, 10, 0),
+      sliderInput("Migration_Balance", "Wanderungssaldo", -10, 10, 0),
+      sliderInput("Emp_Rate_Women", "Frauenerwerbsquote", -10, 10, 0),
+      sliderInput("Emp_Rate_Foreign", "Erwerbsquote Ausländer", -10, 10, 0)
     )
   ),
   sliderInput("Pay_Gap_Gender", "Gender Pay Gap", -10, 10, 0),
-  sliderInput("Child_Poverty", "Child Poverty", -10, 0, 0),
+  sliderInput("Child_Poverty", "Kinderarmut", -10, 0, 0),
   hr(),
   
-  sliderInput("Emp_Rate", "Overall Employment Rate", 0, 10, 0),
+  sliderInput("Emp_Rate", "Gesamtbeschäftigungsquote", 0, 10, 0),
   hr(),
   
-  sliderInput("sector", "Economic Sectors (Category)", -10, 10, 0),
-  checkboxInput("show_sector", "Show Sector Details", FALSE),
+  sliderInput("sector", "Wirtschaftssektoren (Kategorie)", -10, 10, 0),
+  checkboxInput("show_sector", "Details zu Wirtschaftssektoren anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_sector == true",
     wellPanel(
-      sliderInput("Emp_Primary", "Primary Sector", -10, 10, 0),
-      sliderInput("Emp_Secundary", "Secondary Sector", -10, 10, 0),
-      sliderInput("Emp_Tertiary", "Tertiary Sector", -10, 10, 0)
+      sliderInput("Emp_Primary", "Primärer Sektor", -10, 10, 0),
+      sliderInput("Emp_Secundary", "Sekundärer Sektor", -10, 10, 0),
+      sliderInput("Emp_Tertiary", "Tertiärer Sektor", -10, 10, 0)
     )
   ),
   hr(),
   
-  sliderInput("Emp_AO_Academic", "Academic Qualification", -10, 10, 0),
-  sliderInput("Emp_AO_Vocational", "Vocational Training", -10, 10, 0),
-  sliderInput("Emp_AO_NoTrain", "No Formal Training", -10, 10, 0),
-  sliderInput("Emp_Expert", "Experts", -10, 10, 0),
-  sliderInput("Emp_Specialist", "Specialists", -10, 10, 0),
-  sliderInput("Emp_Professional", "Skilled Professionals", -10, 10, 0),
-  sliderInput("Emp_Helper", "Helpers", -10, 10, 0),
+  sliderInput("Emp_AO_Academic", "Akademische Qualifikation", -10, 10, 0),
+  sliderInput("Emp_AO_Vocational", "Berufsausbildung", -10, 10, 0),
+  sliderInput("Emp_AO_NoTrain", "Ohne Berufsausbildung", -10, 10, 0),
+  sliderInput("Emp_Expert", "Experten", -10, 10, 0),
+  sliderInput("Emp_Specialist", "Spezialisten", -10, 10, 0),
+  sliderInput("Emp_Professional", "Fachkräfte", -10, 10, 0),
+  sliderInput("Emp_Helper", "Helfer", -10, 10, 0),
   hr(),
   
-  sliderInput("economy", "Economic Performance (Category)", -10, 10, 0),
-  checkboxInput("show_economy", "Show Economic Details", FALSE),
+  sliderInput("economy", "Wirtschaftsleistung (Kategorie)", -10, 10, 0),
+  checkboxInput("show_economy", "Details zur Wirtschaftsleistung anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_economy == true",
     wellPanel(
-      sliderInput("GDP_perCapita", "GDP per Capita", -10, 10, 0),
-      sliderInput("Purchasing_Power", "Purchasing Power", -10, 10, 0),
-      sliderInput("Income_Median_Age25to54", "Income (Age 25–54)", -10, 10, 0),
-      sliderInput("Income_Median_Age55to64", "Income (Age 55–64)", -10, 10, 0),
-      sliderInput("Investment_Allocations", "Investment Funding", -10, 10, 0)
+      sliderInput("GDP_perCapita", "BIP pro Kopf", -10, 10, 0),
+      sliderInput("Purchasing_Power", "Kaufkraft", -10, 10, 0),
+      sliderInput("Income_Median_Age25to54", "Einkommen (Alter 25–54)", -10, 10, 0),
+      sliderInput("Income_Median_Age55to64", "Einkommen (Alter 55–64)", -10, 10, 0),
+      sliderInput("Investment_Allocations", "Investitionsförderung", -10, 10, 0)
     )
   ),
   hr(),
   
-  sliderInput("Traffic_Accidents", "Traffic Accidents", -10, 0, 0),
-  sliderInput("Emp_Creative", "Creative Industries", -10, 10, 0),
+  sliderInput("Traffic_Accidents", "Verkehrsunfälle", -10, 0, 0),
+  sliderInput("Emp_Creative", "Kreativwirtschaft", -10, 10, 0),
   hr()
 )
 
 tooltips_ui <- tagList(
   bsTooltip("Age_18_65",
-            "Share of the population aged 18 to 65.",
+            "Anteil der Bevölkerung im Alter von 18 bis 65 Jahren.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Age_6_18",
-            "Children and teenagers: share of the population aged 6 to 18.",
+            "Kinder und Jugendliche: Anteil der Bevölkerung im Alter von 6 bis 18 Jahren.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Age_65",
-            "Older population: Share of residents aged 65 and above.",
+            "Ältere Bevölkerung: Anteil der Einwohner ab 65 Jahren.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Age_below_6",
-            "Young children: Share of the population under age 6.",
+            "Kleinkinder: Anteil der Bevölkerung unter 6 Jahren.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Airport_Access",
-            "Average travel time by car to the nearest international airport in Germany, measured in minutes. Negative weights favor districts with a smaller average travel time.",
+            "Durchschnittliche Fahrtzeit mit dem Auto zum nächsten internationalen Flughafen in Deutschland, gemessen in Minuten. Negative Gewichte begünstigen Kreise mit kürzerer durchschnittlicher Fahrtzeit.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("all",
-            "This button calculates the RegioIndex across all German rural and urban districts.",
+            "Diese Schaltfläche berechnet den RegioIndex für alle deutschen Land- und Stadtkreise.",
             placement = "bottom", trigger = "hover"),
   
   bsTooltip("Apprent_Positions",
-            "Total number of company-based apprenticeship positions per 100 apprenticeship seekers. This variable indicates how easy it is for young people to find a training place.",
+            "Gesamtzahl der betrieblichen Ausbildungsplätze je 100 Ausbildungsplatzsuchende. Diese Variable zeigt, wie leicht es für Jugendliche ist, einen Ausbildungsplatz zu finden.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("areal",
-            "Captures usually less favourable spatial conditions, such as land sealing or settlement areas located in flood-prone zones. Negative weights for this category increasingly favor districts with relatively smaller amounts of such area.",
+            "Erfasst in der Regel weniger günstige räumliche Gegebenheiten, wie Flächenversiegelung oder Siedlungsflächen in hochwassergefährdeten Gebieten. Negative Gewichte für diese Kategorie begünstigen zunehmend Kreise mit vergleichsweise geringeren solchen Flächenanteilen.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("air",
-            "Evaluates air quality in a region. A negative weight for this category and its variables favours districts with cleaner air and lower pollution levels.",
+            "Bewertet die Luftqualität in einer Region. Ein negatives Gewicht für diese Kategorie und ihre Variablen begünstigt Kreise mit saubererer Luft und geringerer Belastung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Broadband_1000Mbps",
-            "Share of households with internet access of at least 1000 Mbps.",
+            "Anteil der Haushalte mit einem Internetzugang von mindestens 1000 Mbps.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Broadband_100Mbps",
-            "Share of households with internet access of at least 100 Mbps.",
+            "Anteil der Haushalte mit einem Internetzugang von mindestens 100 Mbps.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Broadband_50Mbps",
-            "Share of households with internet access of at least 50 Mbps.",
+            "Anteil der Haushalte mit einem Internetzugang von mindestens 50 Mbps.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Charg_Points_per100EV",
-            "Charging points per 100 electric vehicles: Shows how well charging infrastructure is developed relative to the local electric vehicle stock.",
+            "Ladepunkte je 100 Elektrofahrzeuge: Zeigt, wie gut die Ladeinfrastruktur im Verhältnis zum lokalen Elektrofahrzeugbestand ausgebaut ist.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Child_Poverty",
-            "Share of children living in households receiving basic income support (Bürgergeld/Grundsicherung).",
+            "Anteil der Kinder, die in Haushalten leben, die Bürgergeld/Grundsicherung erhalten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("co_avg",
-            "Average carbon monoxide concentration in the air. Negative weights value districts with a lower environmental burden through CO.",
+            "Durchschnittliche Kohlenmonoxidkonzentration in der Luft. Negative Gewichte begünstigen Kreise mit geringerer Umweltbelastung durch CO.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Daycare",
-            "Daycare provision: Share of children with access to a childcare place.",
+            "Kitaversorgung: Anteil der Kinder mit Zugang zu einem Betreuungsplatz.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("digital",
-            "Evaluates the digital infrastructure of a region, especially broadband coverage. A higher weight for this category favors better digital connectivity.",
+            "Bewertet die digitale Infrastruktur einer Region, insbesondere die Breitbandversorgung. Ein höheres Gewicht für diese Kategorie begünstigt eine bessere digitale Anbindung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Doc_GP",
-            "Number of general practitioners relative to the population.",
+            "Anzahl der Allgemeinärzte im Verhältnis zur Bevölkerung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("edu",
-            "Describes the availability of educational infrastructure such as schools, daycare facilities, and apprenticeship opportunities.",
+            "Beschreibt die Verfügbarkeit von Bildungsinfrastruktur wie Schulen, Kindertageseinrichtungen und Ausbildungsmöglichkeiten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("economy",
-            "Measures the economic performance of a region, including purchasing power, income, GDP, and investment. Higher values indicate stronger economic performance.",
+            "Misst die Wirtschaftsleistung einer Region, einschließlich Kaufkraft, Einkommen, BIP und Investitionen. Höhere Werte deuten auf eine stärkere Wirtschaftsleistung hin.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_AO_Academic",
-            "Share of employees with a university degree among all employees subject to social insurance contributions.",
+            "Anteil der Beschäftigten mit Hochschulabschluss an allen sozialversicherungspflichtig Beschäftigten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_AO_NoTrain",
-            "Share of employees without formal qualifications among all employees subject to social insurance contributions.",
+            "Anteil der Beschäftigten ohne formale Qualifikation an allen sozialversicherungspflichtig Beschäftigten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_AO_Vocational",
-            "Share of employees with completed vocational training among all employees subject to social insurance contributions.",
+            "Anteil der Beschäftigten mit abgeschlossener Berufsausbildung an allen sozialversicherungspflichtig Beschäftigten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Creative",
-            "Share of employees working in creative sectors among all employees subject to social insurance contributions. This serves as a proxy for the cultural offer of a district.",
+            "Anteil der Beschäftigten in Kreativbranchen an allen sozialversicherungspflichtig Beschäftigten. Dient als Proxy für das kulturelle Angebot eines Kreises.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Expert",
-            "Share of employees in highly qualified occupations among all employees subject to social insurance contributions.",
+            "Anteil der Beschäftigten in hochqualifizierten Berufen an allen sozialversicherungspflichtig Beschäftigten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Helper",
-            "Share of employees in low-skilled occupations among all employees subject to social insurance contributions.",
+            "Anteil der Beschäftigten in Helferberufen an allen sozialversicherungspflichtig Beschäftigten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Primary",
-            "Share of employees working in agriculture, forestry, and fishing among all employees subject to social insurance contributions.",
+            "Anteil der Beschäftigten in Land-, Forstwirtschaft und Fischerei an allen sozialversicherungspflichtig Beschäftigten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Professional",
-            "Share of employees in occupations requiring intermediate qualification levels among all employees subject to social insurance contributions.",
+            "Anteil der Beschäftigten in Berufen mit mittlerem Anforderungsniveau an allen sozialversicherungspflichtig Beschäftigten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Rate",
-            "Overall employment rate: Share of employed persons in the working-age population.",
+            "Gesamtbeschäftigungsquote: Anteil der Erwerbstätigen an der erwerbsfähigen Bevölkerung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Rate_Foreign",
-            "Share of employed persons with foreign citizenship.",
+            "Anteil der Beschäftigten mit ausländischer Staatsangehörigkeit.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Rate_Women",
-            "Share of women who are employed.",
+            "Anteil der erwerbstätigen Frauen.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Secundary",
-            "Share of employees working in manufacturing and construction among all employees subject to social insurance contributions.",
+            "Anteil der Beschäftigten im produzierenden Gewerbe und Baugewerbe an allen sozialversicherungspflichtig Beschäftigten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Specialist",
-            "Share of employees in specialised occupations among all employees subject to social insurance contributions.",
+            "Anteil der Beschäftigten in Spezialistenberufen an allen sozialversicherungspflichtig Beschäftigten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Tertiary",
-            "Share of employees working in services among all employees subject to social insurance contributions.",
+            "Anteil der Beschäftigten im Dienstleistungssektor an allen sozialversicherungspflichtig Beschäftigten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Forest_Area",
-            "Share of forest land in the total area of the region.",
+            "Anteil der Waldfläche an der Gesamtfläche der Region.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("GDP_perCapita",
-            "Economic output per resident.",
+            "Wirtschaftsleistung pro Einwohner.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("green",
-            "Describes access to green, forest, and water areas. A higher weight indicates greater preference for recreational potential and more nature-based quality of life.",
+            "Beschreibt den Zugang zu Grün-, Wald- und Wasserflächen. Ein höheres Gewicht zeigt eine stärkere Präferenz für Erholungspotenzial und naturnahe Lebensqualität.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Highspeed_Rail_Access",
-            "Average travel time by car to the nearest intercity or high-speed rail station, measured in minutes.",
+            "Durchschnittliche Fahrtzeit mit dem Auto zum nächsten Fernbahn- oder Hochgeschwindigkeitsbahnhof, gemessen in Minuten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Highway_Access",
-            "Average travel time by car to the nearest motorway access point, measured in minutes.",
+            "Durchschnittliche Fahrtzeit mit dem Auto zur nächsten Autobahnanschlussstelle, gemessen in Minuten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Income_Median_Age25to54",
-            "Median income, age 25–54: Typical income level of the core working-age population.",
+            "Medianeinkommen, Alter 25–54: Typisches Einkommensniveau der Kernerwerbsbevölkerung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Income_Median_Age55to64",
-            "Median income, age 55–64: Typical income level closer to retirement.",
+            "Medianeinkommen, Alter 55–64: Typisches Einkommensniveau kurz vor dem Rentenalter.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("infra",
-            "Measures access to transport infrastructure such as motorways, airports, rail, and public transport. Lower travel times are more strongly favored when weights are set accordingly.",
+            "Misst den Zugang zur Verkehrsinfrastruktur wie Autobahnen, Flughäfen, Bahn und ÖPNV. Wenn die Gewichte positive gesetzt werden, werden Regionen mit einer besseren infrastrukturellen Anbindung höher gewichtet.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Investment_Allocations",
-            "This variable measures how much public investment funding a district receives per resident.",
+            "Diese Variable misst, wie viel öffentliche Investitionsförderung ein Kreis pro Einwohner erhält.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Land_Price",
-            "Average price per square metre of building land.",
+            "Durchschnittlicher Preis pro Quadratmeter Bauland.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("lk",
-            "This button calculates the RegioIndex for rural districts only.",
+            "Diese Schaltfläche berechnet den RegioIndex ausschließlich für Landkreise.",
             placement = "bottom", trigger = "hover"),
   
   bsTooltip("Migration_Balance",
-            "Net migration: difference between in-migration and out-migration in a region.",
+            "Wanderungssaldo: Differenz zwischen Zu- und Abwanderung in einer Region.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("mob_trans",
-            "Captures aspects of the mobility transition, such as electric mobility and charging infrastructure.",
+            "Erfasst Aspekte der Mobilitätswende, wie Elektromobilität und Ladeinfrastruktur.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("New_Housing_per_Capita",
-            "This variable shows how many new homes are built relative to the population and serves as a proxy for housing supply in a region.",
+            "Diese Variable zeigt, wie viele neue Wohnungen im Verhältnis zur Bevölkerung gebaut werden, und dient als Proxy für das Wohnungsangebot in einer Region.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("no2_avg",
-            "Average nitrogen dioxide concentration in the air.",
+            "Durchschnittliche Stickstoffdioxidkonzentration in der Luft.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("pb_avg",
-            "Average lead concentration in the air.",
+            "Durchschnittliche Bleikonzentration in der Luft.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Pay_Gap_Gender",
-            "Median income of full-time employed women relative to that of full-time employed men. This variable measures the gender pay gap.",
+            "Medianeinkommen vollzeitbeschäftigter Frauen im Verhältnis zu dem vollzeitbeschäftigter Männer. Diese Variable misst den geschlechtsspezifischen Lohnunterschied.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Permit_Housing_perCapita",
-            "Housing permits per capita: Approved dwellings relative to the population, serving as an indicator of future construction activity and housing supply.",
+            "Baugenehmigungen pro Kopf: Genehmigte Wohnungen im Verhältnis zur Bevölkerung, als Indikator für künftige Bautätigkeit und Wohnungsangebot.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Pharmacy_Access",
-            "Average travel time by car to the nearest pharmacy.",
+            "Durchschnittliche Fahrtzeit mit dem Auto zur nächsten Apotheke.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("pm10_avg",
-            "Average particulate matter concentration (PM10).",
+            "Durchschnittliche Feinstaubkonzentration (PM10).",
             placement = "top", trigger = "hover"),
   
   bsTooltip("pm25_avg",
-            "Average finer particulate matter concentration (PM2.5).",
+            "Durchschnittliche Feinstaubkonzentration (PM2.5).",
             placement = "top", trigger = "hover"),
   
   bsTooltip("pop",
-            "Accounts for the size and density of the population. Higher weights tend to favour more urbanised and densely populated areas.",
+            "Berücksichtigt die Größe und Dichte der Bevölkerung. Höhere Gewichte begünstigen tendenziell stärker urbanisierte und dichter besiedelte Gebiete.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Population",
-            "Total number of residents in a region.",
+            "Gesamtanzahl der Einwohner in einer Region.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Population_Density",
-            "Residents per square kilometre. Indicates how densely settled a region is.",
+            "Einwohner pro Quadratkilometer. Gibt an, wie dicht besiedelt eine Region ist.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Public_Transport_Access",
-            "Average travel time by car to the nearest public transport stop.",
+            "Durchschnittliche Fahrtzeit mit dem Auto zur nächsten ÖPNV-Haltestelle.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Purchasing_Power",
-            "Disposable income per resident available for consumption and saving after taxes and social contributions.",
+            "Verfügbares Einkommen pro Einwohner, das nach Steuern und Sozialabgaben für Konsum und Sparen zur Verfügung steht.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Recreation_Area_per_Capita",
-            "Space available for leisure and recreation per capita.",
+            "Pro-Kopf-Fläche für Freizeit und Erholung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Rent_NetAvg",
-            "Average net cold rent for residential housing.",
+            "Durchschnittliche Nettokaltmiete für Wohnraum.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("retail",
-            "Captures local basic services, such as access to supermarkets, doctors, and pharmacies.",
+            "Erfasst lokale Grundversorgungsangebote, wie den Zugang zu Supermärkten, Ärzten und Apotheken.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("School_Primary",
-            "Number of primary schools in a region.",
+            "Anzahl der Grundschulen in einer Region.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("School_SpecialEdu",
-            "Number of schools with a special educational focus.",
+            "Anzahl der Schulen mit sonderpädagogischem Schwerpunkt.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("sector",
-            "Shows the economic structure of a region based on employment across different sectors.",
+            "Zeigt die Wirtschaftsstruktur einer Region anhand der Beschäftigung in verschiedenen Sektoren.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Sealed_Area_per_Capita",
-            "Describes the amount of sealed land per resident.",
+            "Beschreibt die Menge versiegelter Fläche pro Einwohner.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Settlement_Area_in_Flood_Zone",
-            "Share of built-up land located in potentially flood-prone areas.",
+            "Anteil der bebauten Fläche in potenziell hochwassergefährdeten Gebieten.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Share_Car_Electro",
-            "Share of fully electric passenger cars in the total vehicle stock.",
+            "Anteil der reinen Elektro-Pkw am gesamten Fahrzeugbestand.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Share_Car_Hybrid",
-            "Share of hybrid cars in the total passenger car stock.",
+            "Anteil der Hybrid-Pkw am gesamten Pkw-Bestand.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Share_Women_Council",
-            "Share of women in local councils: This variable reflects political representation and gender equality in a region.",
+            "Anteil der Frauen in Gemeinderäten: Diese Variable spiegelt die politische Repräsentation und Geschlechtergleichstellung in einer Region wider.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("sk",
-            "This button calculates the RegioIndex for urban districts only.",
+            "Diese Schaltfläche berechnet den RegioIndex ausschließlich für Stadtkreise.",
             placement = "bottom", trigger = "hover"),
   
   bsTooltip("social",
-            "Captures social structures such as equal opportunities, integration, and social participation.",
+            "Erfasst soziale Strukturen wie Chancengleichheit, Integration und gesellschaftliche Teilhabe.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("so2_avg",
-            "Average sulphur dioxide concentration in the air.",
+            "Durchschnittliche Schwefeldioxidkonzentration in der Luft.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Supermarket_Access",
-            "Average travel time by car to the nearest supermarket.",
+            "Durchschnittliche Fahrtzeit mit dem Auto zum nächsten Supermarkt.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Traffic_Accidents",
-            "Traffic casualties per 100,000 residents: This variable primarily reflects road safety in a region.",
+            "Verkehrsverunglückte je 100.000 Einwohner: Diese Variable spiegelt vor allem die Verkehrssicherheit in einer Region wider.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Water_Area",
-            "Share of water bodies in the total area of a region.",
+            "Anteil der Wasserflächen an der Gesamtfläche einer Region.",
             placement = "top", trigger = "hover")
 )
 
@@ -613,16 +613,16 @@ ui <- fluidPage(
           class = "stage1-header",
           actionButton(
             "how",
-            "How does RegioIndex work?",
+            "Wie funktioniert RegioIndex?",
             style = "color: #fff; background-color: #337ab7; border-color: #2e6da4;"
           )
         ),
         div(
           class = "stage1-subtitle",
-          "Set your preferences first, then choose whether you want to compare all districts, only urban districts, or only rural districts."
+          "Legen Sie zunächst Ihre Präferenzen fest und wählen Sie dann, ob Sie alle Kreise, nur Stadtkreise oder nur Landkreise vergleichen möchten."
         ),
         controls_ui,
-        district_buttons_ui(center = TRUE) ,
+        district_buttons_ui(center = TRUE),
         tooltips_ui
       )
     )
@@ -633,7 +633,7 @@ ui <- fluidPage(
     tagList(
       actionButton(
         "how",
-        "How does RegioIndex work?",
+        "Wie funktioniert RegioIndex?",
         style = "color: #fff; background-color: #337ab7; border-color: #2e6da4"
       ),
       hr(),
@@ -664,10 +664,10 @@ server <- function(input, output, session) {
   
   observeEvent(TRUE, {
     shinyalert(
-      "Welcome",
-      "Welcome to RegioIndex - the dashboard that helps you find your favourite place in Germany!",
+      "Willkommen",
+      "Willkommen beim RegioIndex – dem Dashboard, das Ihnen hilft, Ihren Lieblingsort in Deutschland zu finden!",
       showCancelButton = FALSE,
-      confirmButtonText = "Let's go!",
+      confirmButtonText = "Los geht's!",
       imageUrl = "https://raw.githubusercontent.com/GStahn/ranking_german_counties/refs/heads/main/modal_pic_small.png",
       imageWidth = 375,
       imageHeight = 250,
@@ -701,21 +701,46 @@ server <- function(input, output, session) {
   
   observeEvent(input$how, {
     shinyalert(
-      title = "How does RegioIndex work?",
+      title = "Wie funktioniert RegioIndex?",
       text = HTML("
-        <div style='text-align:left; line-height:1.4;'>
-          <p><b>RegioIndex</b> helps you compare rural and urban cities in Germany based on
-          <b>how well they match your personal preferences</b>.</p>
-          <hr/>
-          <ul>
-            <li>Use the sliders to set your preferences.</li>
-            <li>Click All, Urban, or Rural to generate the first ranking.</li>
-            <li>After that, the charts update automatically when sliders change.</li>
-            <li>Click a district in the bar chart to see municipalities within it.</li>
-          </ul>
-        </div>
-      "),
-      confirmButtonText = "Got it",
+      <div style='text-align:left; line-height:1.4;'>
+        <p><b>RegioIndex</b> hilft Ihnen, Land- und Stadtkreise in Deutschland danach zu vergleichen,
+        <b>wie gut sie Ihren persönlichen Präferenzen entsprechen</b>. Sie entscheiden, welche Faktoren
+        für Sie am wichtigsten sind, und die App berechnet ein individuell zugeschnittenes Ranking.</p>
+
+        <hr/>
+
+        <h4 style='margin-bottom:6px;'>1) So nutzen Sie die App</h4>
+        <ul>
+          <li>Verwenden Sie links die <b>Schieberegler</b>, um einzustellen, wie wichtig Ihnen verschiedene Themen sind (z. B. Umwelt, Infrastruktur, Wirtschaft).</li>
+          <li>Skala: <b>-10</b> (weniger ist besser), <b>0</b> (nicht relevant), <b>+10</b> (sehr wichtig).</li>
+          <li>Mit <b>Details anzeigen</b> können Sie die Variablen einer Kategorie separat anpassen (z. B. NO<sub>2</sub>, PM2.5, ÖPNV, Breitband).</li>
+          <li>Wählen Sie oben, ob Sie <b>Alle Kreise</b>, nur <b>Stadtkreise</b> oder nur <b>Landkreise</b> vergleichen möchten.</li>
+        </ul>
+
+        <h4 style='margin-bottom:6px;'>2) Was Sie als Ergebnis erhalten</h4>
+        <ul>
+          <li>Ein Balkendiagramm mit den <b>Top-20-Regionen</b>, die am besten zu Ihren Präferenzen passen.</li>
+          <li>Jede Region erhält einen <b>RegioIndex-Wert</b> zwischen <b>0</b> und <b>100</b>.</li>
+          <li><b>100</b> steht für einen theoretischen idealen Kreis, der Ihrem Wunschprofil perfekt entsprechen würde.</li>
+          <li>Sie können <b>auf jeden Kreis im Diagramm klicken</b>, um ihn genauer zu erkunden.</li>
+          <li>Nach dem Klick erscheint ein zweites Diagramm mit einem <b>Ranking der Gemeinden innerhalb dieses Kreises</b>, das Ihnen hilft, den geeignetsten Ort zu finden.</li>
+        </ul>
+
+        <h4 style='margin-bottom:6px;'>3) Wie der RegioIndex grob berechnet wird</h4>
+        <ol>
+          <li>Alle Indikatoren werden zunächst <b>normiert</b>, damit sie vergleichbar sind.</li>
+          <li>Ihre Schieberegler-Werte werden als <b>Gewichte</b> verwendet (von -10 bis +10, intern reskaliert).</li>
+          <li>Anschließend wird für jede Region eine <b>gewichtete Summe</b> berechnet und auf einen Bereich von <b>0–100</b> skaliert.</li>
+        </ol>
+
+        <p style='margin-top:10px;'>
+          <i>Tipps:</i> Wenn Sie Schieberegler auf 0 belassen, haben diese Faktoren keinen Einfluss auf das Ranking.
+          Probieren Sie verschiedene Gewichte aus, um zu sehen, welche Regionen zu unterschiedlichen Lebensstilen passen.
+        </p>
+      </div>
+    "),
+      confirmButtonText = "Verstanden",
       closeOnEsc = TRUE,
       html = TRUE
     )
@@ -840,9 +865,9 @@ server <- function(input, output, session) {
     
     title_text <- switch(
       district_type(),
-      "all" = "Top 20 Districts",
-      "sk"  = "Top 20 Urban Districts",
-      "lk"  = "Top 20 Rural Districts"
+      "all" = "Top-20-Kreise",
+      "sk"  = "Top-20-Stadtkreise",
+      "lk"  = "Top-20-Landkreise"
     )
     
     current_weights <- weights()
@@ -991,9 +1016,9 @@ server <- function(input, output, session) {
       y = Index,
       key = ID_K,
       text = paste0(
-        "<b>District:</b> ", Name,
+        "<b>Kreis:</b> ", Name,
         "<br><b>Index:</b> ", Index,
-        "<br><b>District ID:</b> ", ID_K
+        "<br><b>Kreis-ID:</b> ", ID_K
       )
     )) +
       geom_col(fill = "blue") +
@@ -1002,13 +1027,13 @@ server <- function(input, output, session) {
       scale_y_continuous(
         limits = c(0, 100),
         breaks = c(0, 25, 50, 75, 100),
-        labels = c("0", "25", "50", "75", "100\nYour ideal district"),
+        labels = c("0", "25", "50", "75", "100\nIhr Idealkreis"),
         expand = expansion(mult = c(0, 0.15))
       ) +
       labs(
         title = res$title,
         x = "",
-        y = "Your Quality of Life Index"
+        y = "Ihr Lebensqualitätsindex"
       ) +
       theme_minimal(base_size = 16)
     
@@ -1039,7 +1064,7 @@ server <- function(input, output, session) {
   output$county_title <- renderText({
     req(stage() == 2)
     req(selected_district())
-    paste0("Top municipalities in: ", selected_district()$Name)
+    paste0("Top-Gemeinden in: ", selected_district()$Name)
   })
   
   output$countyPlot <- renderPlot({
@@ -1053,7 +1078,7 @@ server <- function(input, output, session) {
       plot.new()
       text(
         0.5, 1,
-        "No municipality data available for this district.",
+        "Für diesen Kreis sind keine Gemeindedaten verfügbar.",
         cex = 1.2
       )
       return(invisible(NULL))
@@ -1063,7 +1088,7 @@ server <- function(input, output, session) {
       plot.new()
       text(
         0.5, 1,
-        "This district is not subdivided into multiple municipalities.",
+        "Dieser Kreis ist nicht in mehrere Gemeinden unterteilt.",
         cex = 1.2
       )
       return(invisible(NULL))
@@ -1080,7 +1105,7 @@ server <- function(input, output, session) {
       labs(
         title = NULL,
         x = "",
-        y = "Quality of Life Index"
+        y = "Lebensqualitätsindex"
       ) +
       theme_minimal(base_size = 14) +
       theme(
@@ -1091,7 +1116,7 @@ server <- function(input, output, session) {
 }
 
 ## -----------------------------------------------------------------------------
-## Call to shinyApp
+## Aufruf der Shiny-App
 ## -----------------------------------------------------------------------------
 
 shinyApp(ui = ui, server = server)

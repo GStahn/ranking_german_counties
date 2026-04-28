@@ -1,6 +1,6 @@
 ## ---------------------------
 ##
-## Script name: WO_index_shiny_exante_countyranking
+## Script name: WO_index_shiny_exante_countyranking_en
 ##
 ## Purpose of script: Creates a Shiny application for ranking German districts
 ##                    based on the user's preferences. In a first step, the app

@@ -1,0 +1,10 @@
+name: Beta_counties
+title: Counties (Beta)
+username: gstahn
+account: gstahn
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16969900
+bundleId: 11758762
+url: https://gstahn.shinyapps.io/Beta_counties/
+version: 1
