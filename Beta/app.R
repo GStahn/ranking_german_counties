@@ -10,7 +10,7 @@
 ## Autor: Gerrit Stahn
 ##
 ## Erstellt am: 2026-03-24
-## Letzte Aktualisierung: 2026-04-28
+## Letzte Aktualisierung: 2026-04-29
 ##
 ## ---------------------------
 
@@ -234,6 +234,10 @@ html, body {
   .section-body {
     padding: 14px;
   }
+  
+  .export-buttons {
+    display: block;
+  }
 
   .btn {
     width: 100%;
@@ -289,6 +293,7 @@ html, body {
   background: #F5F8FB;
   padding: 16px;
   margin-bottom: 18px;
+  padding-left: 20px;
 }
 
 .help-section-title {
@@ -297,6 +302,7 @@ html, body {
   font-weight: 700;
   font-size: 18px;
   margin-bottom: 10px;
+  padding-left: 20px;
 }
 
 .help-section-body ul,
@@ -311,6 +317,113 @@ html, body {
   border-radius: 10px;
   box-shadow: none;
   margin-top: 16px;
+}
+.login-help-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.35);
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-help-modal {
+  width: min(760px, 92vw);
+  max-height: 88vh;
+  background: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.login-help-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid #E3E7EB;
+  text-align: left;
+}
+
+.login-help-header > div {
+  font-weight: 700;
+  color: #205585;
+  font-size: 1.2rem;
+}
+
+.login-help-body {
+  padding: 20px 22px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.login-help-footer1,
+.login-help-footer2 {
+  padding: 14px 22px;
+  border-top: 1px solid #E3E7EB;
+}
+
+.login-help-footer1 {
+  text-align: left;
+}
+
+.login-help-footer2 {
+  text-align: center;
+}
+
+/* Einheitliches Layout innerhalb des Hilfefensters */
+
+.login-help-body .help-intro-box,
+.login-help-body .help-section,
+.login-help-body .help-tip-box {
+  background: #FFFFFF;
+  border: 1px solid #E3E7EB;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  text-align: left;
+}
+
+.login-help-body .help-intro-box {
+  background: #F5F8FB;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+}
+
+.login-help-body .help-section-title {
+  margin-top: 0;
+  color: #205585;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 10px;
+  padding-left: 0;
+  text-align: left;
+}
+
+.login-help-body .help-section-body {
+  text-align: left;
+}
+
+.login-help-body .help-section-body ul,
+.login-help-body .help-section-body ol {
+  margin-bottom: 0;
+  padding-left: 20px;
+}
+
+.login-help-body .help-tip-box {
+  background: #FFF8E1;
+  border-left: 4px solid #E1BD4E;
+  border-radius: 10px;
+  box-shadow: none;
+  margin-top: 16px;
+}
+.responsive-img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 "
 
@@ -365,8 +478,8 @@ help_content_ui <- function(include_feedback = FALSE) {
         tagList("Ein Balkendiagramm mit den ", tags$b("Top-20-Regionen"), ", die am besten zu Ihren Präferenzen passen."),
         tagList("Jede Region erhält einen ", tags$b("RegioIndex-Wert"), " zwischen ", tags$b("0"), " und ", tags$b("100"), "."),
         tagList(tags$b("100"), " steht für einen theoretischen idealen Kreis, der Ihrem Wunschprofil perfekt entsprechen würde."),
-        tagList("Sie können ", tags$b("auf jeden Kreis im Diagramm klicken"), ", um ihn genauer zu erkunden."),
-        tagList("Nach dem Klick erscheint ein zweites Diagramm mit einem ", tags$b("Ranking der Gemeinden innerhalb dieses Kreises"), ".")
+        tagList("Sie können ", tags$b("auf ausgewählte Kreise im Diagramm klicken"), "."),
+        tagList("Nach dem Klick erscheint bei allen Kreisen, die in Gemeinden unterteilt sind, ein zweites Diagramm mit einem ", tags$b("Ranking dieser Gemeinden"), ".")
       )
     ),
     
@@ -379,6 +492,14 @@ help_content_ui <- function(include_feedback = FALSE) {
         tagList("Für jede Region wird eine ", tags$b("gewichtete Summe"), " berechnet und anschließend auf ", tags$b("0–100"), " skaliert.")
       ),
       ordered = TRUE
+    ),
+    
+    help_section_ui(
+      "Export",
+      "📤",
+      list(
+        tagList("Sie haben die Möglichkeit, alle ", tags$b("erzeugten Abbildungen "), "als png-Datei ", tags$b("zu exportieren"), ".")
+      )
     ),
     
     div(
@@ -1009,6 +1130,12 @@ app_ui <- fluidPage(
     column(
       width = 8,
       uiOutput("results_ui")
+    ),
+    
+    # Export Gem
+    div(
+      class = "section-body",
+      uiOutput("download_gem_ui") 
     )
   )
 )
@@ -1027,8 +1154,7 @@ ui <- secure_app(
     
     tags$img(
       src = "modal_pic_small.png",
-      width = 500,
-      height = 333,
+      class = "responsive-img",
       alt = "Logo not found"
     ),
     
@@ -1063,7 +1189,7 @@ ui <- secure_app(
         ),
         
         div(
-          class = "login-help-footer",
+          class = "login-help-footer2",
           tags$button(
             type = "button",
             class = "btn btn-secondary btn-sm",
@@ -1406,7 +1532,15 @@ server <- function(input, output, session) {
       ),
       
       conditionalPanel(
-        condition = "output.has_selected_district",
+        condition = "input.all > 0 || input.sk > 0 || input.lk > 0",
+        div(
+          class = "section-body",
+          uiOutput("download_kre_ui") 
+        )
+      ),
+      
+      conditionalPanel(
+        condition = "output.has_county_plot",
         div(id = "county_anchor"),
         div(
           class = "main-card",
@@ -1421,12 +1555,12 @@ server <- function(input, output, session) {
     !is.null(selected_district())
   })
   outputOptions(output, "has_selected_district", suspendWhenHidden = FALSE)
-  
-  output$barPlot <- renderPlotly({
+    
+    p <- reactive({ 
     res <- district_index_reactive()
     req(res$data)
-    
-    p <- ggplot(res$data, aes(
+
+      ggplot(res$data, aes(
       x = reorder(Name, Index),
       y = Index,
       key = ID_K,
@@ -1451,12 +1585,11 @@ server <- function(input, output, session) {
         y = "Ihr Lebensqualitätsindex"
       ) +
       theme_minimal(base_size = 16)
-    
-    
-    ggplotly(p, tooltip = "colour", source = "district_click") %>%
-      event_register("plotly_click") |>
-      style(hoverinfo = "none") %>% config(displayModeBar = FALSE) %>%
-      htmlwidgets::onRender(
+    })
+     
+    output$barPlot <- renderPlotly({   
+    ggplotly(p(), tooltip = "colour", source = "district_click") %>%
+      style(hoverinfo = "none") %>% config(displayModeBar = FALSE) %>%  htmlwidgets::onRender(
         paste0(
           "function(el, x) {",
           "  function setCursor() {",
@@ -1483,25 +1616,36 @@ server <- function(input, output, session) {
         )
       )
   })
+
+    # ------------------ DOWNLOAD UI KRE ------------------
+    
+    output$download_kre_ui <- renderUI({
+      req(p())
+      
+      div(
+        class = "export-buttons",
+        downloadButton("download_kre", "Download Kreise")
+      )
+    })
   
   observeEvent(
     event_data("plotly_click", source = "district_click", priority = "event"),
     {
       res <- district_index_reactive()
       click <- event_data("plotly_click", source = "district_click", priority = "event")
-      
+
       req(click$key)
-      
+
       selected_row <- res$data %>%
         dplyr::filter(ID_K == click$key) %>%
         slice(1)
-      
+
       req(nrow(selected_row) == 1)
       selected_district(selected_row)
     },
     ignoreInit = TRUE
   )
-  
+
   observeEvent(
     event_data("plotly_click", source = "district_click", priority = "event"),
     {
@@ -1524,39 +1668,17 @@ server <- function(input, output, session) {
     },
     ignoreInit = TRUE
   )
+
   
   output$county_title <- renderText({
     req(selected_district())
     paste0("Top-Gemeinden in: ", selected_district()$Name)
   })
   
-  output$countyPlot <- renderPlot({
-    req(selected_district())
+  p_gem <- reactive({
     req(county_data_reactive())
     
-    dat <- county_data_reactive()
-    
-    if (nrow(dat) == 0) {
-      plot.new()
-      text(
-        0.5, 1,
-        "Für diesen Kreis sind keine Gemeindedaten verfügbar.",
-        cex = 1.2
-      )
-      return(invisible(NULL))
-    }
-    
-    if (nrow(dat) == 1) {
-      plot.new()
-      text(
-        0.5, 1,
-        "Dieser Kreis ist nicht in mehrere Gemeinden unterteilt.",
-        cex = 1.2
-      )
-      return(invisible(NULL))
-    }
-    
-    ggplot(dat, aes(x = reorder(Name, Index), y = Index)) +
+    ggplot(county_data_reactive(), aes(x = reorder(Name, Index), y = Index)) +
       geom_col(fill = "darkgreen") +
       coord_flip() +
       scale_y_continuous(
@@ -1575,6 +1697,105 @@ server <- function(input, output, session) {
         axis.text = element_text(color = "black")
       )
   })
+  
+  observeEvent(
+    event_data("plotly_click", source = "district_click"),
+    {
+      req(county_data_reactive())
+      
+      if (nrow(county_data_reactive()) == 0) {
+        showModal(modalDialog(
+          title = "Hinweis",
+          "Für diesen Kreis sind keine Gemeindedaten verfügbar.",
+          easyClose = TRUE,
+          footer = modalButton("OK")
+        ))
+      }
+      
+      if (nrow(county_data_reactive()) == 1) {
+        showModal(modalDialog(
+          title = "Hinweis",
+          "Dieser Kreis ist nicht in mehrere Gemeinden unterteilt.",
+          easyClose = TRUE,
+          footer = modalButton("OK")
+        ))
+      }
+    }
+  )
+  
+  output$countyPlot <- renderPlot({
+    req(county_data_reactive())
+    req(nrow(county_data_reactive()) > 1)
+    
+    p_gem()
+  })
+  
+  plot_gem_ready <- reactiveVal(FALSE)
+  
+  observeEvent(
+    event_data("plotly_click", source = "district_click"),
+    {
+      plot_gem_ready(TRUE)
+    }
+  )
+  
+  output$has_county_plot <- reactive({
+    dat <- county_data_reactive()
+    !is.null(dat) && nrow(dat) > 1
+  })
+  
+  outputOptions(output, "has_county_plot", suspendWhenHidden = FALSE)
+  
+  output$download_gem_ui <- renderUI({
+    dat <- county_data_reactive()
+    req(dat)
+    req(nrow(dat) > 1)
+    req(selected_district())
+    
+    div(
+      class = "export-buttons",
+      downloadButton("download_gem", paste0("Download Gemeinden in: ", selected_district()$Name))
+    )
+  })
+  
+  download_name <- reactiveVal("Kreisauswahl")
+  
+  observeEvent(input$all, {
+    download_name("alle_Kreise_")
+  })
+  
+  observeEvent(input$sk, {
+    download_name("Stadtkreise_")
+  })
+  
+  observeEvent(input$lk, {
+    download_name("Landkreise_")
+  })
+  
+  output$download_kre <- downloadHandler(
+    filename = function() {
+      paste0("Top20_", download_name(), Sys.Date(), ".png")
+    },
+    content = function(file) {
+      
+      res <- district_index_reactive()
+      req(res$data)
+      
+      ggplot2::ggsave(file, plot = p(), width = 10, height = 6, dpi = 300)
+    }
+  )
+  
+  output$download_gem <- downloadHandler(
+    filename = function() {
+      paste0("Ranking_Gemeinden_", selected_district()$Name, Sys.Date(), ".png")
+    },
+    content = function(file) {
+      req(county_data_reactive())
+      
+      ggplot2::ggsave(file, plot = p_gem(), width = 10, height = 6, dpi = 300)
+    }
+  )
+
 }
 
 ## -----------------------------------------------------------------------------
