@@ -1,6 +1,6 @@
 ## ---------------------------
 ##
-## Skriptname: app.R (Origin: WO_index_shiny_expost_countyranking_twostages_de)
+## Skriptname: app.R
 ##
 ## Zweck des Skripts: Erstellt eine Shiny-Anwendung zur Bewertung deutscher Kreise
 ##                    basierend auf den Präferenzen des Nutzers. In einem ersten Schritt
@@ -10,7 +10,7 @@
 ## Autor: Gerrit Stahn
 ##
 ## Erstellt am: 2026-03-24
-## Letzte Aktualisierung: 2026-04-29
+## Letzte Aktualisierung: 2026-05-13
 ##
 ## ---------------------------
 
@@ -450,8 +450,8 @@ help_intro_ui <- function() {
       style = "margin-bottom:0;",
       tags$b("RegioIndex"),
       " hilft Ihnen, Land- und Stadtkreise in Deutschland danach zu vergleichen, ",
-      tags$b("wie gut sie Ihren persönlichen Präferenzen entsprechen"),
-      ". Sie entscheiden, welche Faktoren für Sie am wichtigsten sind, und die App berechnet ein individuell zugeschnittenes Ranking."
+      tags$b("wie gut sie Ihren persönlichen Präferenzen entsprechen."),
+      "Sie entscheiden, welche Faktoren für Sie am wichtigsten sind, und die App berechnet ein individuell zugeschnittenes Ranking."
     )
   )
 }
@@ -464,9 +464,9 @@ help_content_ui <- function(include_feedback = FALSE) {
       "So nutzen Sie die App",
       "⚙️",
       list(
-        tagList("Verwenden Sie die ", tags$b("Schieberegler"), ", um einzustellen, wie wichtig Ihnen verschiedene Themen sind, z. B. Umwelt, Infrastruktur oder Wirtschaft."),
-        tagList("Skala: ", tags$b("-10"), " = weniger ist besser, ", tags$b("0"), " = nicht relevant, ", tags$b("+10"), " = sehr wichtig."),
-        tagList("Mit ", tags$b("Details anzeigen"), " können Sie die Variablen einer Kategorie separat anpassen, z. B. NO", tags$sub("2"), ", PM2.5, ÖPNV oder Breitband."),
+        tagList("Verwenden Sie die ", tags$b("Schieberegler"), ", um einzustellen, wie wichtig Ihnen verschiedene Themen bei der Findung Ihres Lieblingsortes sind."),
+        tagList("Skala: ", tags$b("-10 bis -1"), " = Je weniger davon umso besser, ", tags$b("0"), " = Nicht relevant, ", tags$b("+10"), " = Je mehr davon umso besser"),
+        tagList("Mit ", tags$i("Details anzeigen"), " können Sie die Variablen einer Kategorie separat anpassen, z. B. Kinderarmut, Zugang zum ÖPNV oder Breitband."),
         tagList("Wählen Sie aus, ob Sie ", tags$b("alle Kreise"), ", nur ", tags$b("Stadtkreise"), " oder nur ", tags$b("Landkreise"), " vergleichen möchten.")
       )
     ),
@@ -579,8 +579,8 @@ controls_ui <- tagList(
   ),
   hr(),
   
-  sliderInput("areal", "Räumliche Aspekte (Kategorie)", -10, 10, 0, width = "100%"),
-  checkboxInput("show_areal", "Details zu räumlichen Aspekten anzeigen", FALSE),
+  sliderInput("areal", "Flächenrisiko (Kategorie)", -10, 10, 0, width = "100%"),
+  checkboxInput("show_areal", "Details zum Flächenrisiko anzeigen", FALSE),
   conditionalPanel(
     condition = "input.show_areal == true",
     wellPanel(
@@ -674,23 +674,17 @@ controls_ui <- tagList(
       sliderInput("Emp_Rate_Foreign", "Erwerbsquote Ausländer", -10, 10, 0, width = "100%")
     )
   ),
-  sliderInput("Pay_Gap_Gender", "Gender Pay Gap", -10, 10, 0, width = "100%"),
+  sliderInput("Pay_Gap_Gender", "Verdienst Unterschied Männer und Frauen", -10, 10, 0, width = "100%"),
   sliderInput("Child_Poverty", "Kinderarmut", -10, 0, 0, width = "100%"),
   hr(),
   
   sliderInput("Emp_Rate", "Gesamtbeschäftigungsquote", 0, 10, 0, width = "100%"),
   hr(),
   
-  sliderInput("sector", "Wirtschaftssektoren (Kategorie)", -10, 10, 0, width = "100%"),
-  checkboxInput("show_sector", "Details zu Wirtschaftssektoren anzeigen", FALSE),
-  conditionalPanel(
-    condition = "input.show_sector == true",
-    wellPanel(
-      sliderInput("Emp_Primary", "Primärer Sektor", -10, 10, 0, width = "100%"),
-      sliderInput("Emp_Secundary", "Sekundärer Sektor", -10, 10, 0, width = "100%"),
-      sliderInput("Emp_Tertiary", "Tertiärer Sektor", -10, 10, 0, width = "100%")
-    )
-  ),
+  
+  sliderInput("Emp_Primary", "Primärer Sektor", -10, 10, 0, width = "100%"),
+  sliderInput("Emp_Secundary", "Sekundärer Sektor", -10, 10, 0, width = "100%"),
+  sliderInput("Emp_Tertiary", "Tertiärer Sektor", -10, 10, 0, width = "100%"),
   hr(),
   
   sliderInput("Emp_AO_Academic", "Akademische Qualifikation", -10, 10, 0, width = "100%"),
@@ -723,19 +717,19 @@ controls_ui <- tagList(
 
 tooltips_ui <- tagList(
   bsTooltip("Age_18_65",
-            "Anteil der Bevölkerung im Alter von 18 bis 65 Jahren.",
+            "Alter 18–65 beschreibt den Anteil der Bevölkerung im erwerbsfähigen Alter. Ein positives Gewicht bevorzugt Regionen mit hoher Erwerbsbevölkerung, ein negatives Gewicht Regionen mit geringerem Anteil im erwerbsfähigen Alter.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Age_6_18",
-            "Kinder und Jugendliche: Anteil der Bevölkerung im Alter von 6 bis 18 Jahren.",
+            "Alter 6–18 beschreibt den Anteil von Kindern und Jugendlichen im Schulalter. Ein positives Gewicht bevorzugt Regionen mit vielen jungen Menschen, ein negatives Gewicht Regionen mit geringerem Anteil schulpflichtiger Kinder und Jugendlicher.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Age_65",
-            "Ältere Bevölkerung: Anteil der Einwohner ab 65 Jahren.",
+            "Alter > 65 beschreibt den Anteil älterer Menschen in einer Region. Ein positives Gewicht bevorzugt Regionen mit vielen Senior:innen, ein negatives Gewicht Regionen mit jüngerer Bevölkerungsstruktur.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Age_below_6",
-            "Kleinkinder: Anteil der Bevölkerung unter 6 Jahren.",
+            "Alter < 6 beschreibt den Anteil sehr junger Kinder in einer Region. Ein positives Gewicht bevorzugt Regionen mit vielen Kleinkindern, ein negatives Gewicht Regionen mit geringerem Anteil sehr junger Kinder.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Airport_Access",
@@ -747,75 +741,75 @@ tooltips_ui <- tagList(
             placement = "bottom", trigger = "hover"),
   
   bsTooltip("Apprent_Positions",
-            "Gesamtzahl der betrieblichen Ausbildungsplätze je 100 Ausbildungsplatzsuchende. Diese Variable zeigt, wie leicht es für Jugendliche ist, einen Ausbildungsplatz zu finden.",
+            "Gesamtzahl der betrieblichen Ausbildungsplätze je 100 Ausbildungsplatzsuchende. Ein positives Gewicht bevorzugt Regionen mit vielen Ausbildungsplätzen, ein negatives Gewicht Regionen mit weniger stark ausgeprägtem Ausbildungsmarkt.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("areal",
-            "Erfasst in der Regel weniger günstige räumliche Gegebenheiten, wie Flächenversiegelung oder Siedlungsflächen in hochwassergefährdeten Gebieten. Negative Gewichte für diese Kategorie begünstigen zunehmend Kreise mit vergleichsweise geringeren solchen Flächenanteilen.",
+            "Die Kategorie Flächenrisiken beschreibt Hochwasserrisiken und Flächenversiegelung. Ein positives Gewicht bevorzugt stärker belastete Regionen, ein negatives Gewicht Regionen mit geringeren Flächenrisiken.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("air",
-            "Bewertet die Luftqualität in einer Region. Ein negatives Gewicht für diese Kategorie und ihre Variablen begünstigt Kreise mit saubererer Luft und geringerer Belastung.",
+            "Bewertet die Luftqualität in einer Region. Je negativer das Gewicht für diese Kategorie und ihre Variablen gesetzt wird, umso mehr werden Regionen mit saubererer Luft und geringerer Belastung im Raking berücksichtigt.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Broadband_1000Mbps",
-            "Anteil der Haushalte mit einem Internetzugang von mindestens 1000 Mbps.",
+            "Anteil der Haushalte mit einem Internetzugang von mindestens 1000 Mbps. Ein höheres Gewicht bevorzugt Regionen mit besserer Basis-Breitbandversorgung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Broadband_100Mbps",
-            "Anteil der Haushalte mit einem Internetzugang von mindestens 100 Mbps.",
+            "Anteil der Haushalte mit einem Internetzugang von mindestens 100 Mbps. Ein höheres Gewicht bevorzugt Regionen mit besserer Basis-Breitbandversorgung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Broadband_50Mbps",
-            "Anteil der Haushalte mit einem Internetzugang von mindestens 50 Mbps.",
+            "Anteil der Haushalte mit einem Internetzugang von mindestens 50 Mbps. Ein höheres Gewicht bevorzugt Regionen mit besserer Basis-Breitbandversorgung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Charg_Points_per100EV",
-            "Ladepunkte je 100 Elektrofahrzeuge: Zeigt, wie gut die Ladeinfrastruktur im Verhältnis zum lokalen Elektrofahrzeugbestand ausgebaut ist.",
+            "Ladepunkte je 100 E-Fahrzeuge beschreibt den Ausbau der Ladeinfrastruktur im Verhältnis zur E-Fahrzeugnutzung. Ein positives Gewicht bevorzugt Regionen mit guter Ladeversorgung, ein negatives Gewicht Regionen, in denen Ladeinfrastruktur eine geringere Rolle spielt.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Child_Poverty",
-            "Anteil der Kinder, die in Haushalten leben, die Bürgergeld/Grundsicherung erhalten.",
+            "Anteil der Kinder, die in Haushalten leben, die Bürgergeld/Grundsicherung erhalten. Da der Regler nur negative Werte zulässt, können Regionen mit höherer Kinderarmut gezielt geringer gewichtet werden.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("co_avg",
-            "Durchschnittliche Kohlenmonoxidkonzentration in der Luft. Negative Gewichte begünstigen Kreise mit geringerer Umweltbelastung durch CO.",
+            "Durchschnittliche Kohlenmonoxidkonzentration in der Luft. Da der Regler nur negative Werte zulässt, werden Regionen mit höherer CO-Belastung geringer gewichtet.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Daycare",
-            "Kitaversorgung: Anteil der Kinder mit Zugang zu einem Betreuungsplatz.",
+            "Kitaversorgung: Anteil der Kinder mit Zugang zu einem Betreuungsplatz. Ein positives Gewicht bevorzugt Regionen mit guter frühkindlicher Betreuung, ein negatives Gewicht Regionen mit geringerer institutioneller Betreuungsdichte.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("digital",
-            "Bewertet die digitale Infrastruktur einer Region, insbesondere die Breitbandversorgung. Ein höheres Gewicht für diese Kategorie begünstigt eine bessere digitale Anbindung.",
+            "Die Kategorie Digitale Infrastruktur beschreibt die Breitbandversorgung einer Region mit 50, 100 und 1000 Mbps. Ein höheres Gewicht bevorzugt Regionen mit besser ausgebauter digitaler Anbindung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Doc_GP",
-            "Anzahl der Allgemeinärzte im Verhältnis zur Bevölkerung.",
+            "Anzahl der Allgemeinärzte im Verhältnis zur Bevölkerung. Ein positives Gewicht bevorzugt Regionen mit guter hausärztlicher Versorgung, ein negatives Gewicht Regionen mit weniger dichter medizinischer Infrastruktur.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("edu",
-            "Beschreibt die Verfügbarkeit von Bildungsinfrastruktur wie Schulen, Kindertageseinrichtungen und Ausbildungsmöglichkeiten.",
+            "Die Kategorie Bildung beschreibt die Bildungs- und Betreuungsinfrastruktur einer Region, etwa durch Grund- und Förderschulen, Kitas und Ausbildungsplätze. Ein positives Gewicht bevorzugt Regionen mit gut ausgebauten Bildungs- und Betreuungsangeboten, ein negatives Gewicht eher ruhigere bzw. weniger verdichtete Regionen mit geringerer institutioneller Angebotsdichte.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("economy",
-            "Misst die Wirtschaftsleistung einer Region, einschließlich Kaufkraft, Einkommen, BIP und Investitionen. Höhere Werte deuten auf eine stärkere Wirtschaftsleistung hin.",
+            "Die Kategorie Wirtschaftsleistung beschreibt die wirtschaftliche Stärke einer Region, etwa durch BIP pro Kopf, Kaufkraft, Einkommen und Investitionsförderung. Ein positives Gewicht bevorzugt wirtschaftlich stärkere Regionen mit höherer Kauf- und Einkommenskraft, ein negatives Gewicht Regionen mit geringerer wirtschaftlicher Dynamik und potenziell höherem Förder- bzw. Entwicklungspotenzial.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_AO_Academic",
-            "Anteil der Beschäftigten mit Hochschulabschluss an allen sozialversicherungspflichtig Beschäftigten.",
+            "Akademische Qualifikation beschreibt den Anteil akademisch qualifizierter Beschäftigter. Ein positives Gewicht bevorzugt Regionen mit höherem Akademiker:innenanteil, ein negatives Gewicht Regionen mit stärker praxis- oder ausbildungsorientierter Beschäftigungsstruktur.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_AO_NoTrain",
-            "Anteil der Beschäftigten ohne formale Qualifikation an allen sozialversicherungspflichtig Beschäftigten.",
+            "Ohne Berufsausbildung beschreibt den Anteil Beschäftigter ohne formale Berufsausbildung. Ein positives Gewicht bevorzugt Regionen mit höherem Anteil niedrigqualifizierter Beschäftigung, ein negatives Gewicht Regionen mit stärker formal qualifizierter Beschäftigungsstruktur.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_AO_Vocational",
-            "Anteil der Beschäftigten mit abgeschlossener Berufsausbildung an allen sozialversicherungspflichtig Beschäftigten.",
+            "Berufsausbildung beschreibt den Anteil beruflich qualifizierter Beschäftigter. Ein positives Gewicht bevorzugt Regionen mit stark ausgeprägter dualer bzw. beruflicher Qualifikationsstruktur, ein negatives Gewicht Regionen mit geringerer Prägung durch beruflich Ausgebildete.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Creative",
-            "Anteil der Beschäftigten in Kreativbranchen an allen sozialversicherungspflichtig Beschäftigten. Dient als Proxy für das kulturelle Angebot eines Kreises.",
+            "Anteil der Beschäftigten in Kreativbranchen an allen sozialversicherungspflichtig Beschäftigten. Dient als Proxy für das kulturelle Angebot eines Kreises. Ein positives Gewicht bevorzugt Regionen mit stärker ausgeprägter Kreativwirtschaft, ein negatives Gewicht Regionen mit geringerer kreativer bzw. kultureller Wirtschaftsprägung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Expert",
@@ -823,55 +817,55 @@ tooltips_ui <- tagList(
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Helper",
-            "Anteil der Beschäftigten in Helferberufen an allen sozialversicherungspflichtig Beschäftigten.",
+            "Helfer beschreibt den Anteil einfacher Tätigkeiten mit geringerem Anforderungsniveau. Ein positives Gewicht bevorzugt Regionen mit höherem Anteil an Helfertätigkeiten, ein negatives Gewicht Regionen mit stärker qualifikationsintensiver Beschäftigungsstruktur.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Primary",
-            "Anteil der Beschäftigten in Land-, Forstwirtschaft und Fischerei an allen sozialversicherungspflichtig Beschäftigten.",
+            "Anteil der Beschäftigten in Land-, Forstwirtschaft und Fischerei an allen sozialversicherungspflichtig Beschäftigten. Ein positives Gewicht bevorzugt stärker agrarisch bzw. naturnah geprägte Regionen, ein negatives Gewicht weniger stark landwirtschaftlich geprägte Regionen.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Professional",
-            "Anteil der Beschäftigten in Berufen mit mittlerem Anforderungsniveau an allen sozialversicherungspflichtig Beschäftigten.",
+            "Fachkräfte beschreibt den Anteil qualifizierter Facharbeit. Ein positives Gewicht bevorzugt Regionen mit starker Fachkräftebasis, ein negatives Gewicht Regionen mit weniger stark ausgeprägter Fachkräftestruktur.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Rate",
-            "Gesamtbeschäftigungsquote: Anteil der Erwerbstätigen an der erwerbsfähigen Bevölkerung.",
+            "Gesamtbeschäftigungsquote: Anteil der Erwerbstätigen an der erwerbsfähigen Bevölkerung. Ein höheres Gewicht bevorzugt Regionen mit höherer Beschäftigungsquote.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Rate_Foreign",
-            "Anteil der Beschäftigten mit ausländischer Staatsangehörigkeit.",
+            "Erwerbsquote Ausländer beschreibt die Erwerbsbeteiligung ausländischer Personen. Ein positives Gewicht bevorzugt Regionen mit hoher Arbeitsmarktintegration ausländischer Personen, ein negatives Gewicht Regionen mit geringer ausgeprägter internationaler Erwerbsintegration.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Rate_Women",
-            "Anteil der erwerbstätigen Frauen.",
+            "Frauenerwerbsquote beschreibt die Erwerbsbeteiligung von Frauen. Ein positives Gewicht bevorzugt Regionen mit hoher Frauenerwerbsquote, ein negatives Gewicht Regionen mit traditionelleren Erwerbsstrukturen.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Secundary",
-            "Anteil der Beschäftigten im produzierenden Gewerbe und Baugewerbe an allen sozialversicherungspflichtig Beschäftigten.",
+            "Anteil der Beschäftigten im produzierenden Gewerbe und Baugewerbe an allen sozialversicherungspflichtig Beschäftigten. Ein positives Gewicht bevorzugt stärker industriell bzw. gewerblich geprägte Regionen, ein negatives Gewicht Regionen mit geringerer industrieller Prägung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Specialist",
-            "Anteil der Beschäftigten in Spezialistenberufen an allen sozialversicherungspflichtig Beschäftigten.",
+            "Spezialisten beschreibt den Anteil gehobener fachlicher Tätigkeiten. Ein positives Gewicht bevorzugt Regionen mit vielen spezialisierten Beschäftigten, ein negatives Gewicht Regionen mit geringerer Spezialisierung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Emp_Tertiary",
-            "Anteil der Beschäftigten im Dienstleistungssektor an allen sozialversicherungspflichtig Beschäftigten.",
+            "Anteil der Beschäftigten im Dienstleistungssektor an allen sozialversicherungspflichtig Beschäftigten. Ein positives Gewicht bevorzugt stärker service-, wissens- und verwaltungsorientierte Regionen, ein negatives Gewicht Regionen mit geringerer Dienstleistungsprägung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Forest_Area",
-            "Anteil der Waldfläche an der Gesamtfläche der Region.",
+            "Anteil der Waldfläche an der Gesamtfläche der Region. Ein positives Gewicht bevorzugt waldreiche Regionen, ein negatives Gewicht stärker urbane oder offenere Regionen mit geringerer Waldprägung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("GDP_perCapita",
-            "Wirtschaftsleistung pro Einwohner.",
+            "BIP pro Kopf beschreibt die wirtschaftliche Leistungsfähigkeit einer Region. Ein positives Gewicht bevorzugt wirtschaftsstarke Regionen, ein negatives Gewicht Regionen mit geringerem Leistungsniveau und höherem Entwicklungspotenzial.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("green",
-            "Beschreibt den Zugang zu Grün-, Wald- und Wasserflächen. Ein höheres Gewicht zeigt eine stärkere Präferenz für Erholungspotenzial und naturnahe Lebensqualität.",
+            "Die Kategorie Grünflächen bildet zusammenfassend ab, wie stark eine Region durch Erholungsflächen, Waldflächen und Wasserflächen geprägt ist. Ein positives Gewicht begünstigt Regionen mit einer hohen Ausstattung an Grün- und Naturflächen. Ein negatives Gewicht begünstigt dagegen stärker verdichtete bzw. urbane Räume, in denen Grün-, Wald- und Wasserflächen im Vergleich weniger stark ausgeprägt sind.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Highspeed_Rail_Access",
-            "Durchschnittliche Fahrtzeit mit dem Auto zum nächsten Fernbahn- oder Hochgeschwindigkeitsbahnhof, gemessen in Minuten.",
+            "Durchschnittliche Fahrtzeit mit dem Auto zum nächsten Fernbahn- oder Hochgeschwindigkeitsbahnhof, gemessen in Minuten. Ein positives Gewicht bevorzugt Regionen mit guter Fernbahnanbindung, ein negatives Gewicht weniger stark frequentierte Regionen mit ruhigerer Lage.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Highway_Access",
@@ -879,23 +873,23 @@ tooltips_ui <- tagList(
             placement = "top", trigger = "hover"),
   
   bsTooltip("Income_Median_Age25to54",
-            "Medianeinkommen, Alter 25–54: Typisches Einkommensniveau der Kernerwerbsbevölkerung.",
+            "Einkommen Alter 25–54 beschreibt das mittlere Einkommen der Bevölkerung im Haupterwerbsalter. Ein positives Gewicht bevorzugt einkommensstarke Regionen, ein negatives Gewicht Regionen mit moderaterem Einkommensniveau.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Income_Median_Age55to64",
-            "Medianeinkommen, Alter 55–64: Typisches Einkommensniveau kurz vor dem Rentenalter.",
+            "Einkommen Alter 55–64 beschreibt das mittlere Einkommen älterer Erwerbstätiger. Ein positives Gewicht bevorzugt Regionen mit hoher Einkommensstärke in dieser Altersgruppe, ein negatives Gewicht Regionen mit moderaterem Einkommensniveau.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("infra",
-            "Misst den Zugang zur Verkehrsinfrastruktur wie Autobahnen, Flughäfen, Bahn und ÖPNV. Wenn die Gewichte positive gesetzt werden, werden Regionen mit einer besseren infrastrukturellen Anbindung höher gewichtet.",
+            "Die Kategorie Verkehrsinfrastruktur beschreibt die Erreichbarkeit einer Region über Autobahn, Flughafen, Fernbahn und ÖPNV. Ein positives Gewicht bevorzugt Regionen mit guter Verkehrsanbindung, ein negatives Gewicht eher ruhigere, weniger stark erschlossene Regionen mit tendenziell geringerer Verkehrs- und Lärmbelastung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Investment_Allocations",
-            "Diese Variable misst, wie viel öffentliche Investitionsförderung ein Kreis pro Einwohner erhält.",
+            "Diese Variable misst, wie viel öffentliche Investitionsförderung eine Region pro Einwohner erhält. Ein positives Gewicht bevorzugt Regionen mit stärkerer Investitionsförderung, ein negatives Gewicht Regionen mit geringerem Fördermitteleinsatz.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Land_Price",
-            "Durchschnittlicher Preis pro Quadratmeter Bauland.",
+            "Bodenpreis beschreibt das Preisniveau für Bauland. Ein positives Gewicht bevorzugt Regionen mit höheren Bodenpreisen und stärkerem Nachfragedruck, ein negatives Gewicht Regionen mit günstigeren Grundstückspreisen.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("lk",
@@ -903,107 +897,103 @@ tooltips_ui <- tagList(
             placement = "bottom", trigger = "hover"),
   
   bsTooltip("Migration_Balance",
-            "Wanderungssaldo: Differenz zwischen Zu- und Abwanderung in einer Region.",
+            "Wanderungssaldo beschreibt, ob eine Region eher Zu- oder Abwanderung verzeichnet. Ein positives Gewicht bevorzugt wachsende Regionen mit positivem Wanderungssaldo, ein negatives Gewicht Regionen mit geringerem Zuzug bzw. stärkerer Abwanderung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("mob_trans",
-            "Erfasst Aspekte der Mobilitätswende, wie Elektromobilität und Ladeinfrastruktur.",
+            "Die Kategorie Mobilitätswende beschreibt den Ausbau elektrifizierter Mobilität, etwa durch Ladepunkte sowie Hybrid- und Elektrofahrzeuge. Ein positives Gewicht bevorzugt Regionen mit fortgeschrittener elektrifizierter Mobilität. Ein negatives Gewicht begünstigt Regionen, in denen klassische Mobilitätsformen mit Verbrennerfahrzeugen stärker verbreitet sind.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("New_Housing_per_Capita",
-            "Diese Variable zeigt, wie viele neue Wohnungen im Verhältnis zur Bevölkerung gebaut werden, und dient als Proxy für das Wohnungsangebot in einer Region.",
+            "Neue Wohnungen pro Kopf beschreibt die Neubautätigkeit in einer Region. Ein positives Gewicht bevorzugt Regionen mit stärkerem Wohnungsneubau, ein negatives Gewicht Regionen mit geringerer baulicher Dynamik.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("no2_avg",
-            "Durchschnittliche Stickstoffdioxidkonzentration in der Luft.",
+            "Durchschnittliche Stickstoffdioxidkonzentration in der Luft. Da der Regler nur negative Werte zulässt, werden Regionen mit höherer NO2-Belastung geringer gewichtet.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("pb_avg",
-            "Durchschnittliche Bleikonzentration in der Luft.",
+            "Durchschnittliche Bleikonzentration in der Luft. Da der Regler nur negative Werte zulässt, werden Regionen mit höherer Bleibelastung geringer gewichtet.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Pay_Gap_Gender",
-            "Medianeinkommen vollzeitbeschäftigter Frauen im Verhältnis zu dem vollzeitbeschäftigter Männer. Diese Variable misst den geschlechtsspezifischen Lohnunterschied.",
+            "Medianeinkommen vollzeitbeschäftigter Frauen im Verhältnis zu dem vollzeitbeschäftigter Männer. Ein positives Gewicht bevorzugt Regionen mit größerem Verdienstunterschied, ein negatives Gewicht Regionen mit geringerer geschlechtsspezifischer Einkommensungleichheit.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Permit_Housing_perCapita",
-            "Baugenehmigungen pro Kopf: Genehmigte Wohnungen im Verhältnis zur Bevölkerung, als Indikator für künftige Bautätigkeit und Wohnungsangebot.",
+            "Baugenehmigungen beschreiben geplante bzw. genehmigte Wohnbauaktivität. Ein positives Gewicht bevorzugt Regionen mit hoher zukünftiger Bautätigkeit, ein negatives Gewicht Regionen mit ruhigerer oder stabilerer Siedlungsentwicklung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Pharmacy_Access",
-            "Durchschnittliche Fahrtzeit mit dem Auto zur nächsten Apotheke.",
+            "Durchschnittliche Fahrtzeit mit dem Auto zur nächsten Apotheke. in positives Gewicht bevorzugt Regionen mit guter Apothekenanbindung, ein negatives Gewicht ruhigere bzw. weniger zentral versorgte Regionen.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("pm10_avg",
-            "Durchschnittliche Feinstaubkonzentration (PM10).",
+            "Durchschnittliche Feinstaubkonzentration (PM10). Da der Regler nur negative Werte zulässt, werden Regionen mit höherer PM10-Belastung geringer gewichtet.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("pm25_avg",
-            "Durchschnittliche Feinstaubkonzentration (PM2.5).",
+            "Durchschnittliche Feinstaubkonzentration (PM2.5). Da der Regler nur negative Werte zulässt, werden Regionen mit höherer PM2.5-Belastung geringer gewichtet.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("pop",
-            "Berücksichtigt die Größe und Dichte der Bevölkerung. Höhere Gewichte begünstigen tendenziell stärker urbanisierte und dichter besiedelte Gebiete.",
+            "Die Kategorie Bevölkerung beschreibt Größe und Dichte einer Region. Ein positives Gewicht bevorzugt bevölkerungsreiche und dicht besiedelte Regionen, ein negatives Gewicht eher kleinere bzw. dünner besiedelte Regionen.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Population",
-            "Gesamtanzahl der Einwohner in einer Region.",
+            "Gesamtbevölkerung beschreibt die Größe einer Region. Ein positives Gewicht bevorzugt bevölkerungsreiche Regionen, ein negatives Gewicht kleinere, überschaubarere Regionen.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Population_Density",
-            "Einwohner pro Quadratkilometer. Gibt an, wie dicht besiedelt eine Region ist.",
+            "Einwohner pro Quadratkilometer. Ein positives Gewicht bevorzugt urbane bzw. dicht besiedelte Regionen, ein negatives Gewicht ruhigere, weniger verdichtete Regionen.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Public_Transport_Access",
-            "Durchschnittliche Fahrtzeit mit dem Auto zur nächsten ÖPNV-Haltestelle.",
+            "Durchschnittliche Fahrtzeit mit dem Auto zur nächsten ÖPNV-Haltestelle. Ein positives Gewicht bevorzugt Regionen mit gut ausgebautem ÖPNV, ein negatives Gewicht Regionen mit stärker individueller bzw. weniger zentralisierter Mobilitätsstruktur.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Purchasing_Power",
-            "Verfügbares Einkommen pro Einwohner, das nach Steuern und Sozialabgaben für Konsum und Sparen zur Verfügung steht.",
+            "Kaufkraft beschreibt die finanzielle Konsum- und Nachfragekraft der Bevölkerung. Ein positives Gewicht bevorzugt Regionen mit hoher Kaufkraft, ein negatives Gewicht Regionen mit günstigerem Preis- und Konsumniveau.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Recreation_Area_per_Capita",
-            "Pro-Kopf-Fläche für Freizeit und Erholung.",
+            "Pro-Kopf-Fläche für Freizeit und Erholung. Ein positives Gewicht bevorzugt Regionen mit viel Erholungsfläche, ein negatives Gewicht stärker urbane bzw. dichter genutzte Regionen.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Rent_NetAvg",
-            "Durchschnittliche Nettokaltmiete für Wohnraum.",
+            "Durchschnittliche Nettokaltmiete beschreibt das Mietpreisniveau einer Region. Ein positives Gewicht bevorzugt Regionen mit höheren Mieten und stärkerer Wohnraumnachfrage, ein negatives Gewicht Regionen mit günstigerem Mietniveau.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("retail",
-            "Erfasst lokale Grundversorgungsangebote, wie den Zugang zu Supermärkten, Ärzten und Apotheken.",
+            "Die Kategorie Handel & Dienstleistungen beschreibt die wohnortnahe Versorgung einer Region mit Supermärkten, Hausärzten und Apotheken. Ein positives Gewicht bevorzugt Regionen mit guter Nahversorgung, ein negatives Gewicht eher ruhigere bzw. weniger zentral versorgte Regionen mit geringerer Angebotsdichte.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("School_Primary",
-            "Anzahl der Grundschulen in einer Region.",
+            "Grundschulen beschreibt die Versorgung einer Region mit Grundschulangeboten. Ein positives Gewicht bevorzugt Regionen mit guter Grundschulversorgung, ein negatives Gewicht Regionen mit geringerer schulischer Angebotsdichte.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("School_SpecialEdu",
-            "Anzahl der Schulen mit sonderpädagogischem Schwerpunkt.",
-            placement = "top", trigger = "hover"),
-  
-  bsTooltip("sector",
-            "Zeigt die Wirtschaftsstruktur einer Region anhand der Beschäftigung in verschiedenen Sektoren.",
+            "Förderschulen beschreibt die Versorgung mit spezialisierten Bildungsangeboten. Ein positives Gewicht bevorzugt Regionen mit stärker ausgebauter sonderpädagogischer Infrastruktur, ein negatives Gewicht Regionen mit geringerer Spezialisierung im Bildungsangebot.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Sealed_Area_per_Capita",
-            "Beschreibt die Menge versiegelter Fläche pro Einwohner.",
+            "Versiegelte Fläche pro Kopf beschreibt den Umfang bebauter bzw. versiegelter Flächen je Einwohner. Ein positives Gewicht bevorzugt stärker versiegelte bzw. baulich geprägte Regionen, ein negatives Gewicht Regionen mit geringerer Flächenversiegelung und mehr Offenflächen.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Settlement_Area_in_Flood_Zone",
-            "Anteil der bebauten Fläche in potenziell hochwassergefährdeten Gebieten.",
+            "Siedlungsfläche in Überschwemmungsgebiet beschreibt den Anteil bebauter Flächen mit Hochwasserrisiko. Ein positives Gewicht bevorzugt Regionen mit höherer Risikoexposition, ein negatives Gewicht Regionen mit geringerer Hochwassergefährdung.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Share_Car_Electro",
-            "Anteil der reinen Elektro-Pkw am gesamten Fahrzeugbestand.",
+            "Anteil der gemeldeten Elektro-Pkw am gesamten Fahrzeugbestand. Ein positives Gewicht bevorzugt Regionen mit höherem Elektrofahrzeuganteil, ein negatives Gewicht Regionen, in denen klassische Antriebsformen stärker verbreitet sind.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Share_Car_Hybrid",
-            "Anteil der Hybrid-Pkw am gesamten Pkw-Bestand.",
+            "Anteil der gemeldeten Hybrid-Pkw am gesamten Fahrzeugbestand. Anteil Hybridfahrzeuge beschreibt die Verbreitung teil-elektrifizierter Mobilität. Ein positives Gewicht bevorzugt Regionen mit höherem Hybridanteil, ein negatives Gewicht Regionen mit stärker klassisch geprägter Fahrzeugstruktur.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Share_Women_Council",
-            "Anteil der Frauen in Gemeinderäten: Diese Variable spiegelt die politische Repräsentation und Geschlechtergleichstellung in einer Region wider.",
+            "Frauen in Gemeinderäten beschreibt die politische Repräsentation von Frauen in einer Region. Ein positives Gewicht bevorzugt Regionen mit höherem Frauenanteil in Gemeinderäten, ein negatives Gewicht Regionen mit traditionellerer politischer Repräsentationsstruktur.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("sk",
@@ -1011,23 +1001,23 @@ tooltips_ui <- tagList(
             placement = "bottom", trigger = "hover"),
   
   bsTooltip("social",
-            "Erfasst soziale Strukturen wie Chancengleichheit, Integration und gesellschaftliche Teilhabe.",
+            "Die Kategorie „Sozialstruktur“ fasst zusammen, wie inklusiv, ausgewogen und teilhabeorientiert die gesellschaftliche Struktur einer Region ist. Ein positives Gewicht begünstigt Regionen mit stärker ausgeprägter Inklusion und sozialer Teilhabe. Ein negatives Gewicht legt dagegen mehr Gewicht auf Regionen mit geringerer Inklusion bzw. weniger ausgewogenen sozialen Strukturen.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("so2_avg",
-            "Durchschnittliche Schwefeldioxidkonzentration in der Luft.",
+            "Durchschnittliche Schwefeldioxidkonzentration in der Luft. Da der Regler nur negative Werte zulässt, werden Regionen mit höherer SO2-Belastung geringer gewichtet.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Supermarket_Access",
-            "Durchschnittliche Fahrtzeit mit dem Auto zum nächsten Supermarkt.",
+            "Durchschnittliche Fahrtzeit mit dem Auto zum nächsten Supermarkt. Ein positives Gewicht bevorzugt Regionen mit guter Nahversorgung, ein negatives Gewicht ruhigere Regionen mit geringerer Angebotsdichte.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Traffic_Accidents",
-            "Verkehrsverunglückte je 100.000 Einwohner: Diese Variable spiegelt vor allem die Verkehrssicherheit in einer Region wider.",
+            "Verkehrsverunglückte je 100.000 Einwohner: Diese Variable spiegelt vor allem die Verkehrssicherheit in einer Region wider. Da der Regler nur negative Werte zulässt, können Regionen mit höherer Unfallbelastung gezielt geringer gewichtet werden.",
             placement = "top", trigger = "hover"),
   
   bsTooltip("Water_Area",
-            "Anteil der Wasserflächen an der Gesamtfläche einer Region.",
+            "Anteil der Wasserflächen an der Gesamtfläche einer Region. Ein positives Gewicht bevorzugt wasserreiche Regionen, ein negatives Gewicht Regionen mit geringerer Prägung durch Wasserflächen.",
             placement = "top", trigger = "hover")
 )
 

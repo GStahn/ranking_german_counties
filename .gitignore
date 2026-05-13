@@ -1,0 +1,62 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# R session/history files
+.Rhistory
+.Rapp.history
+.RData
+.RDataTmp
+.Ruserdata
+
+# RStudio project/user files
+.Rproj.user/
+*.Rproj.user/
+
+# R build/check artifacts
+.Rcheck/
+*.Rcheck/
+*.tar.gz
+*.Rout
+*.Rout.save
+
+# R package/documentation artifacts
+.Rbuildignore
+vignettes/*.html
+vignettes/*.pdf
+doc/
+Meta/
+
+# R generated outputs / caches
+*_cache/
+cache/
+figures/
+figure/
+.Rcache/
+renv/library/
+renv/staging/
+
+# knitr / R Markdown intermediates
+*.utf8.md
+*.knit.md
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.tex
+*.synctex.gz
+
+# Shiny / deployment artifacts
+rsconnect/
+
+# Excel temp files
+~$*.xlsx
+~$*.xls
+
+# Project-specific files
+RegioIndex_Shortlist_Abnehmer_Ansprechpartner.xlsx
+/Beta/Archive/
+/Beta/shinyapp_set_deploy_ranking.R
