@@ -5,6 +5,6 @@ account: gstahn
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 16969900
-bundleId: 11924808
+bundleId: 12012346
 url: https://gstahn.shinyapps.io/Beta_counties/
 version: 1

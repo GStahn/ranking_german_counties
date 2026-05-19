@@ -515,7 +515,7 @@ help_content_ui <- function(include_feedback = FALSE) {
         list(
           HTML(
             paste0(
-              '<a href="mailto:info@sc261.de',
+              '<a href="mailto:gerrit.stahn93.gs4@gmail.com',
               '?subject=Feedback zu RegioIndex',
               '&body=Hallo,%0D%0A%0D%0A',
               'Ich habe folgendes Feedback zu RegioIndex:%0D%0A%0D%0A">',
