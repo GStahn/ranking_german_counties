@@ -6,9 +6,10 @@ Users can assign positive, neutral, or negative weights to a broad set of region
 
 ## Live App
 
-A beta version of the application is available here:
+Beta versions of the application are available here:
 
-👉 [https://gstahn.shinyapps.io/Beta_counties/](https://gstahn.shinyapps.io/Beta_counties/)
+German 👉 [https://gstahn.shinyapps.io/Beta_counties/](https://gstahn.shinyapps.io/Beta_counties/)
+English 👉 [https://gstahn.shinyapps.io/Beta_counties_en/](https://gstahn.shinyapps.io/Beta_counties_en/)
 
 ## Beta Access
 
